@@ -26,16 +26,19 @@ export default function PlaidLinkComponent() {
         }
 
         setIsLoading(true);
-        const response = await fetch("http://localhost:8080/api/plaid/create-link-token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            user_id: session.user.id,
-          }),
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/plaid/create-link-token",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              user_id: session.user.id,
+            }),
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => null);
@@ -67,17 +70,20 @@ export default function PlaidLinkComponent() {
         }
 
         setIsLoading(true);
-        const response = await fetch("http://localhost:8080/api/plaid/exchange-token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            public_token,
-            user_id: session.user.id,
-          }),
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/plaid/exchange-token",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              public_token,
+              user_id: session.user.id,
+            }),
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => null);
@@ -114,64 +120,46 @@ export default function PlaidLinkComponent() {
   const { open, ready, error } = usePlaidLink(config);
   if (loading) {
     return (
-      <Card className="w-full max-w-md mx-auto">
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-center space-x-2">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>Loading...</span>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-center justify-center space-x-2">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <span>Loading...</span>
+      </div>
     );
   }
 
   if (!session?.access_token) {
     return (
-      <Card className="w-full max-w-md mx-auto">
-        <CardContent className="pt-6">
-          <div className="text-center text-muted-foreground">
-            Please log in to connect your bank account
-          </div>
-        </CardContent>
-      </Card>
+      <div className="text-center text-muted-foreground">
+        Please log in to connect your bank account
+      </div>
     );
   }
 
   if (!linkToken) {
     return (
-      <Card className="w-full max-w-md mx-auto">
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-center space-x-2">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>Preparing Plaid connection...</span>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-center justify-center space-x-2">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <span>Preparing Plaid connection...</span>
+      </div>
     );
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl text-center">Connect Your Bank Account</CardTitle>
-      </CardHeader>
-      <CardContent className="flex justify-center gap-4">
-        <Button
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-lg"
-          disabled={isLoading || !ready}
-          onClick={() => open()}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Connecting...
-            </>
-          ) : (
-            "Connect Bank Account"
-          )}
-        </Button>
-        {error && <p>Error: {error.message}</p>}
-      </CardContent>
-    </Card>
+    <Button
+      variant="default"
+      size="lg"
+      className="text-lg"
+      disabled={isLoading || !ready}
+      onClick={() => open()}
+    >
+      {isLoading ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Connecting...
+        </>
+      ) : (
+        "Connect Bank Account"
+      )}
+    </Button>
   );
 }

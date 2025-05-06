@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +16,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { setSession } = useAuth();
+  const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +28,6 @@ export default function LoginPage() {
         email,
         password,
       });
-      console.log(data);
       if (error) {
         setError(error.message);
         return;
@@ -48,11 +48,15 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-3xl text-center">Sign in to your account</CardTitle>
+          <CardTitle className="text-3xl text-center">
+            Sign in to your account
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form className="space-y-6" onSubmit={handleLogin}>
-            {error && <div className="text-destructive text-center">{error}</div>}
+            {error && (
+              <div className="text-destructive text-center">{error}</div>
+            )}
             <div className="space-y-4">
               <div>
                 <label htmlFor="email" className="sr-only">

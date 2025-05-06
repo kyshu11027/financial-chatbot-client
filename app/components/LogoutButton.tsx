@@ -1,10 +1,11 @@
 "use client";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 
 export default function LogoutButton() {
   const router = useRouter();
+  const supabase = createClient();
 
   const handleLogout = async () => {
     try {

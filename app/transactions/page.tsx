@@ -60,34 +60,45 @@ export default function TransactionsPage() {
         // Fetch transactions for each Plaid item
         const allTransactions: Transaction[] = [];
         for (const item of items) {
-          const response = await fetch("http://localhost:8080/api/plaid/transactions", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({
-              access_token: item.AccessToken,
-            }),
-          });
+          const response = await fetch(
+            "http://localhost:8080/api/plaid/transactions",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session.access_token}`,
+              },
+              body: JSON.stringify({
+                access_token: item.AccessToken,
+              }),
+            }
+          );
 
           if (!response.ok) {
-            throw new Error(`Failed to fetch transactions for item ${item.ItemID}`);
+            throw new Error(
+              `Failed to fetch transactions for item ${item.ItemID}`
+            );
           }
 
           const data = await response.json();
           // Add item_id to each transaction
-          const transactionsWithItemId = data.transactions.map((t: Transaction) => ({
-            ...t,
-            item_id: item.ItemID,
-          }));
+          const transactionsWithItemId = data.transactions.map(
+            (t: Transaction) => ({
+              ...t,
+              item_id: item.ItemID,
+            })
+          );
           allTransactions.push(...transactionsWithItemId);
         }
 
         setTransactions(allTransactions);
       } catch (error) {
         console.error("Error fetching transactions:", error);
-        setError(error instanceof Error ? error.message : "Failed to fetch transactions");
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch transactions"
+        );
       } finally {
         setLoading(false);
       }
@@ -113,7 +124,6 @@ export default function TransactionsPage() {
       }
 
       const data = await response.json();
-      console.log("Context saved successfully:", data);
     } catch (error) {
       console.error("Error saving context:", error);
     }
@@ -148,7 +158,9 @@ export default function TransactionsPage() {
       <div className="container mx-auto p-4">
         <Card>
           <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Please log in to view your transactions</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Please log in to view your transactions
+            </h2>
             <Button asChild>
               <a href="/login">Go to Login</a>
             </Button>
@@ -178,7 +190,9 @@ export default function TransactionsPage() {
       <div className="container mx-auto p-4">
         <Card>
           <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">No bank accounts connected</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              No bank accounts connected
+            </h2>
             <p className="text-muted-foreground mb-4">
               Please connect your bank account to view transactions.
             </p>
@@ -229,7 +243,9 @@ export default function TransactionsPage() {
                       <div className="text-right">
                         <p
                           className={`font-semibold ${
-                            transaction.amount >= 0 ? "text-green-500" : "text-red-500"
+                            transaction.amount >= 0
+                              ? "text-green-500"
+                              : "text-red-500"
                           }`}
                         >
                           ${Math.abs(transaction.amount).toFixed(2)}

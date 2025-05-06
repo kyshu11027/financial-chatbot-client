@@ -1,76 +1,28 @@
 "use client";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowUp } from "lucide-react";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { useAuth } from "@/app/context/AuthContext";
-
-export default function ChatPage() {
-  const searchParams = useSearchParams();
-  const conversationId = searchParams.get("conversationId");
-  const [messages, setMessages] = useState<string[]>([]);
-  const [newMessage, setNewMessage] = useState("");
-  const { session } = useAuth();
-
-  useEffect(() => {
-    if (!conversationId) return;
-
-    // Connect to the SSE endpoint
-    const eventSource = new EventSource(`http://localhost:8080/api/sse/${conversationId}`);
-
-    eventSource.onmessage = (event) => {
-      const message = event.data;
-      setMessages((prevMessages) => [...prevMessages, message]);
-    };
-
-    eventSource.onerror = (error) => {
-      console.error("SSE error:", error);
-      eventSource.close();
-    };
-
-    return () => {
-      eventSource.close(); // Clean up on component unmount
-    };
-  }, [conversationId]);
-
-  const sendMessage = async () => {
-    if (!newMessage) return;
-
-    try {
-      const response = await fetch("http://localhost:8080/api/message/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message: newMessage, conversationId }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to send message");
-      }
-
-      setNewMessage(""); // Clear the input after sending
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  };
-
+export default function page() {
   return (
-    <div className="chat-container">
-      <h1>Chat</h1>
-      <div className="messages">
-        {messages.map((msg, index) => (
-          <div key={index} className="message">
-            {msg}
-          </div>
-        ))}
+    <main className="h-full">
+      <div className="flex flex-col gap-5 items-center align-center justify-center h-full">
+        <h1 className="text-3xl font-bold">How can I help you today?</h1>
+        <Card className="w-full max-w-[48rem] border-gray-600 gap-2 px-0 py-5 rounded-[32px]">
+          <CardContent>
+            <Textarea
+              placeholder="Ask away!"
+              className="rounded-none h-[32px] px-0 py-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent resize-none"
+            />
+          </CardContent>
+          <CardFooter className="flex justify-end">
+            <Button size="icon" className="rounded-full">
+              <ArrowUp />
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
-      <input
-        type="text"
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-        placeholder="Type your message..."
-      />
-      <button onClick={sendMessage}>Send</button>
-    </div>
+    </main>
   );
 }
