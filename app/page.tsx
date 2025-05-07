@@ -17,17 +17,20 @@ export default function Home() {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:8080/api/user-info/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.access_token}`,
-        },
-        body: JSON.stringify({
-          income: income,
-          savings_goal: savingsGoal,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:8080/api/user-info/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({
+            income: income,
+            savings_goal: savingsGoal,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to submit user info");
@@ -35,7 +38,9 @@ export default function Home() {
 
       // Handle successful submission if needed
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unexpected error occurred");
+      setError(
+        err instanceof Error ? err.message : "An unexpected error occurred"
+      );
     } finally {
       setLoading(false);
     }
@@ -72,7 +77,11 @@ export default function Home() {
             className="border p-2 w-full text-black"
           />
         </div>
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded" disabled={loading}>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white p-2 rounded"
+          disabled={loading}
+        >
           {loading ? "Submitting..." : "Submit"}
         </button>
       </form>

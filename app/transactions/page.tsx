@@ -237,7 +237,8 @@ export default function TransactionsPage() {
                           {new Date(transaction.date).toLocaleDateString()}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          {transaction.category.join(", ")}
+                          {transaction.category &&
+                            transaction.category.join(", ")}
                         </p>
                       </div>
                       <div className="text-right">

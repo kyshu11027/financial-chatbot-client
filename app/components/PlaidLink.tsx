@@ -5,7 +5,6 @@ import { PlaidLinkOnSuccess, usePlaidLink } from "react-plaid-link";
 import { useAuth } from "@/app/context/AuthContext";
 import { usePlaid } from "@/app/context/PlaidContext";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 export default function PlaidLinkComponent() {
