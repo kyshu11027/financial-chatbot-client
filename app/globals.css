@@ -63,12 +63,12 @@
   }
 }
 
-textarea::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 8px;
   background: transparent;
 }
 
-textarea::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background-color: rgba(
     255,
     255,
@@ -78,11 +78,11 @@ textarea::-webkit-scrollbar-thumb {
   border-radius: 4px;
 }
 
-textarea::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   background: transparent;
 }
 
-textarea {
+* {
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
   scrollbar-width: thin;
 }

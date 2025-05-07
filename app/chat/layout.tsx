@@ -88,7 +88,7 @@ const SidebarWrapper = ({
         <ChatSidebar conversations={conversations} isLoading={false} />
       )}
       <div className="p-2 flex flex-col h-screen w-full">
-        <div className="h-12 pb-2 w-full flex flex-row items-center">
+        <div className="min-h-12 pb-2 w-full flex flex-row items-center border-b position-sticky top-0">
           {shouldShowTrigger && <SidebarTrigger />}
         </div>
 

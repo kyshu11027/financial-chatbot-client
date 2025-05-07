@@ -71,7 +71,7 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="mx-2 my-4">
         <PlaidLinkComponent />
       </SidebarFooter>
     </Sidebar>
