@@ -36,7 +36,6 @@ export default function UserInfoForm({
 }) {
   const { session } = useAuth();
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data);
 
     try {
       if (!userInfo) {

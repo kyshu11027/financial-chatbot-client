@@ -43,7 +43,6 @@ export default function ChatLayout({
 
   // Call fetchConversations in useEffect
   useEffect(() => {
-    console.log(session?.access_token);
     fetchConversations();
   }, [session, loading]);
 

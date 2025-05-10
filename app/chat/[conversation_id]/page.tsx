@@ -33,7 +33,6 @@ export default function page() {
   
     eventSource.onmessage = (event) => {
       const data = event.data;
-      console.log(`Received data:${data}`);
       if (data) {
         setMessages((prevMessages) => {
           const updatedMessages = [...prevMessages];
@@ -84,7 +83,6 @@ export default function page() {
         }
 
         const data = await res.json();
-        console.log(data)
         setMessages(data);
 
         const aiMessage: Message = {
