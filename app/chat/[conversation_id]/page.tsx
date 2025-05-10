@@ -3,6 +3,8 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
 import ChatInput from "@/app/components/ChatInput";
+import { Skeleton } from "@/components/ui/skeleton";
+import constants from "@/types/constants";
 
 interface Message {
   conversation_id: string;
@@ -18,36 +20,11 @@ export default function page() {
   const { conversation_id } = params;
   const { session, loading } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isReceivingMessage, setIsReceivingMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  
+
   if (typeof conversation_id !== "string") {
     throw new Error("Invalid conversation ID");
-  }
-
-  const setUpEventSource = () => {
-    if (loading || !session?.access_token) return;
-  
-    const eventSource = new EventSource(
-      `http://localhost:8080/sse/${conversation_id}?token=${session.access_token}`
-    );
-  
-    eventSource.onmessage = (event) => {
-      const data = event.data;
-      if (data) {
-        setMessages((prevMessages) => {
-          const updatedMessages = [...prevMessages];
-          const lastIndex = updatedMessages.length - 1;
-  
-          // Append to the message field of the last message
-          updatedMessages[lastIndex] = {
-            ...updatedMessages[lastIndex],
-            message: updatedMessages[lastIndex].message + data,
-          };
-  
-          return updatedMessages;
-        });
-      }
-    };
   }
 
   const scrollToBottom = () => {
@@ -67,16 +44,19 @@ export default function page() {
 
     const fetchMessages = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/chat/messages/get", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            conversation_id,
-          }),
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/chat/message/list`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              conversation_id,
+            }),
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch messages info");
@@ -107,9 +87,57 @@ export default function page() {
   useEffect(() => {
     if (loading || !session?.access_token || !conversation_id) return;
 
+    let eventSource: EventSource | null = null;
+    let retryTimeout: NodeJS.Timeout;
+
+    const setUpEventSource = () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+
+      eventSource = new EventSource(
+        `${process.env.NEXT_PUBLIC_API_URL}/sse/${conversation_id}?token=${session.access_token}`
+      );
+
+      eventSource.onmessage = (event) => {
+        const data = event.data;
+        if (data) {
+          if (data === constants.END_MESSAGE_STRING) {
+            setIsReceivingMessage(false);
+            return;
+          }
+
+          setIsReceivingMessage(true);
+
+          setMessages((prevMessages) => {
+            const updatedMessages = [...prevMessages];
+            const lastIndex = updatedMessages.length - 1;
+
+            updatedMessages[lastIndex] = {
+              ...updatedMessages[lastIndex],
+              message: updatedMessages[lastIndex].message + data,
+            };
+
+            return updatedMessages;
+          });
+        }
+      };
+
+      eventSource.onerror = () => {
+        console.log("EventSource failed, retrying in 1s...");
+        eventSource?.close();
+        retryTimeout = setTimeout(setUpEventSource, constants.SSE_TIMEOUT); // Retry after 1 second
+      };
+    };
+
     setUpEventSource();
+
+    return () => {
+      eventSource?.close();
+      clearTimeout(retryTimeout);
+    };
   }, [conversation_id, session?.access_token, loading]);
-  
+
   const onSubmit = (message: string) => {
     if (loading || !session?.access_token) {
       window.alert("Please try again.");
@@ -119,7 +147,7 @@ export default function page() {
     const sendMessage = async () => {
       try {
         const res = await fetch(
-          "http://localhost:8080/api/chat/messages/send",
+          `${process.env.NEXT_PUBLIC_API_URL}/api/chat/message/send`,
           {
             method: "POST",
             headers: {
@@ -144,6 +172,7 @@ export default function page() {
       }
     };
 
+    setIsReceivingMessage(true);
     sendMessage();
 
     const userMessage: Message = {
@@ -167,7 +196,6 @@ export default function page() {
       return [...prevMessages, userMessage, aiMessage];
     });
 
-    setUpEventSource()
     console.log("Message sent:", message);
   };
 
@@ -175,24 +203,31 @@ export default function page() {
     <main className="h-[calc(100%-3rem)] pt-2 ">
       <div className="flex flex-col gap-5 justify-between items-center h-full">
         <div className="flex-grow overflow-x-hidden flex flex-col w-full max-w-[48rem] gap-5 px-6">
-          {messages.map((message) =>
+          {messages.map((message, index) =>
             message.sender === "UserMessage" ? (
               <div
                 key={`${message.sender}-${message.timestamp}`}
-                className="max-w-1/2 ml-auto py-4 px-6 bg-secondary border rounded-2xl "
+                className="max-w-1/2 ml-auto py-2.5 px-5 bg-secondary border rounded-3xl "
               >
-                <p className="text-lg">{message.message}</p>
+                <p className="text-md">{message.message}</p>
               </div>
             ) : (
               <div key={message.timestamp} className="max-w-3/4 mr-auto p-4 ">
-                <p className="text-lg">{message.message}</p>
+                {isReceivingMessage && index === messages.length - 1 ? (
+                  <Skeleton className="h-4 w-4 bg-foreground rounded-full" />
+                ) : (
+                  <p className="text-md"> {message.message} </p>
+                )}
               </div>
             )
           )}
           <div ref={messagesEndRef} />
         </div>
 
-        <ChatInput onSubmit={onSubmit} />
+        <ChatInput
+          isReceivingMessage={isReceivingMessage}
+          onSubmit={onSubmit}
+        />
       </div>
     </main>
   );

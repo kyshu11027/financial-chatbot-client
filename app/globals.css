@@ -54,15 +54,6 @@
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
 *::-webkit-scrollbar {
   width: 8px;
   background: transparent;
@@ -85,4 +76,17 @@
 * {
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
   scrollbar-width: thin;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate {
+  animation: rotate 1s linear infinite;
 }

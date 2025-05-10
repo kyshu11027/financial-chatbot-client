@@ -47,16 +47,19 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const response = await fetch("http://localhost:8080/api/plaid/items", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          user_id: session.user.id,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/plaid/item/list`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            user_id: session.user.id,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch Plaid items");
@@ -66,7 +69,9 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
       setItems(data.items);
     } catch (error) {
       console.error("Error fetching Plaid items:", error);
-      setError(error instanceof Error ? error.message : "Failed to fetch Plaid items");
+      setError(
+        error instanceof Error ? error.message : "Failed to fetch Plaid items"
+      );
     } finally {
       setLoading(false);
     }
@@ -77,7 +82,9 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
   }, [session]);
 
   return (
-    <PlaidContext.Provider value={{ items, loading, error, refreshItems: fetchItems }}>
+    <PlaidContext.Provider
+      value={{ items, loading, error, refreshItems: fetchItems }}
+    >
       {children}
     </PlaidContext.Provider>
   );

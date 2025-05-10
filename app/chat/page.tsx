@@ -1,48 +1,100 @@
 "use client";
+import { useState, useRef, useEffect } from "react";
 import ChatInput from "@/app/components/ChatInput";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion"; // Import framer-motion
 
 export default function page() {
+  const [isReceivingMessage, setIsReceivingMessage] = useState(false);
   const { session, loading } = useAuth();
   const router = useRouter();
+  const [animateInput, setAnimateInput] = useState(false); // Track animation state
+  const chatInputRef = useRef<HTMLDivElement | null>(null); // Ref to ChatInput
+  const [distanceToBottom, setDistanceToBottom] = useState(0); // Store distance to the bottom of the viewport
+
+  useEffect(() => {
+    // Function to calculate the distance from the bottom of ChatInput to the bottom of the viewport
+    const calculateDistanceToBottom = () => {
+      if (chatInputRef.current) {
+        const rect = chatInputRef.current.getBoundingClientRect();
+        const distance = window.innerHeight - rect.bottom; // Calculate distance from bottom of element to bottom of viewport
+        setDistanceToBottom(distance);
+      }
+    };
+
+    // Calculate when the component mounts or when the window is resized
+    calculateDistanceToBottom();
+    window.addEventListener("resize", calculateDistanceToBottom);
+
+    return () => {
+      window.removeEventListener("resize", calculateDistanceToBottom);
+    };
+  }, []);
+
   const onSubmit = (message: string) => {
-    const createSession = async () => {
+    const createConversation = async () => {
       if (loading || !session?.access_token) return;
       try {
-        const res = await fetch("http://localhost:8080/api/chat/new", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            message,
-          }),
-        });
+        setAnimateInput(true);
+        setIsReceivingMessage(true);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/chat/conversation/new`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              message,
+            }),
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch messages info");
         }
 
         const data = await res.json();
-
         const { conversation_id } = data;
 
         router.push(`/chat/${conversation_id}`);
         router.refresh();
-
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
     };
-    createSession();
+    createConversation();
   };
+
   return (
     <main className="h-full">
       <div className="flex flex-col gap-5 items-center align-center justify-center h-full">
-        <h1 className="text-3xl font-bold">How can I help you today?</h1>
-        <ChatInput onSubmit={onSubmit} />
+        <motion.div
+          initial={{ opacity: 100 }}
+          animate={{
+            opacity: animateInput ? 0 : 100, // Animate based on distance to bottom
+          }}
+          transition={{ duration: 0.5 }} // Smooth transition
+        >
+          <h1 className="text-3xl font-bold">How can I help you today?</h1>
+        </motion.div>
+
+        <motion.div
+          ref={chatInputRef} // Attach ref to the motion div
+          initial={{ y: 0 }} // Start at the top of the screen
+          animate={{
+            y: animateInput ? `calc(${distanceToBottom}px - 0.5rem)` : 0, // Animate based on distance to bottom
+          }}
+          transition={{ duration: 0.5 }} // Smooth transition
+          className="flex flex-row justify-center w-full"
+        >
+          <ChatInput
+            isReceivingMessage={isReceivingMessage}
+            onSubmit={onSubmit}
+          />
+        </motion.div>
       </div>
     </main>
   );

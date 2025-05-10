@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useState, useEffect } from "react";
 import { PlaidLinkOnSuccess, usePlaidLink } from "react-plaid-link";
 import { useAuth } from "@/app/context/AuthContext";
@@ -24,9 +22,12 @@ export default function PlaidLinkComponent() {
           return;
         }
 
+        // Check if linkToken is already available
+        if (linkToken) return;
+
         setIsLoading(true);
         const response = await fetch(
-          "http://localhost:8080/api/plaid/create-link-token",
+          `${process.env.NEXT_PUBLIC_API_URL}/api/plaid/link-token/create`,
           {
             method: "POST",
             headers: {
@@ -59,7 +60,7 @@ export default function PlaidLinkComponent() {
     };
 
     fetchLinkToken();
-  }, [session, loading]);
+  }, [session, loading, linkToken]); // Added linkToken to dependency array
 
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token, metadata) => {
@@ -70,7 +71,7 @@ export default function PlaidLinkComponent() {
 
         setIsLoading(true);
         const response = await fetch(
-          "http://localhost:8080/api/plaid/exchange-token",
+          `${process.env.NEXT_PUBLIC_API_URL}/api/plaid/token/exchange`,
           {
             method: "POST",
             headers: {
@@ -110,6 +111,7 @@ export default function PlaidLinkComponent() {
       console.error("Plaid Link error:", err);
     }
   }, []);
+
   const config = {
     token: linkToken,
     onSuccess: onSuccess,

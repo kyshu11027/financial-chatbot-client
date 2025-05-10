@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import { ChatSidebar } from "@/app/components/ChatSidebar";
 import { SidebarTrigger } from "@/app/components/SidebarButtons";
@@ -20,13 +20,16 @@ export default function ChatLayout({
     if (loading || !session?.access_token) return;
     try {
       setIsLoading(true);
-      const res = await fetch("http://localhost:8080/api/chat/conversations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/chat/conversation/list`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Failed to fetch conversations");
@@ -87,7 +90,7 @@ const SidebarWrapper = ({
         <ChatSidebar conversations={conversations} isLoading={false} />
       )}
       <div className="p-2 flex flex-col h-screen w-full">
-        <div className="min-h-12 pb-2 w-full flex flex-row items-center border-b position-sticky top-0">
+        <div className="min-h-12 pb-2 w-full flex flex-row items-center position-sticky top-0">
           {shouldShowTrigger && <SidebarTrigger />}
         </div>
 

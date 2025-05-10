@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/app/context/AuthContext";
 import { usePlaid } from "@/app/context/PlaidContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -61,7 +61,7 @@ export default function TransactionsPage() {
         const allTransactions: Transaction[] = [];
         for (const item of items) {
           const response = await fetch(
-            "http://localhost:8080/api/plaid/transactions",
+            `${process.env.NEXT_PUBLIC_API_URL}/api/plaid/transaction/list`,
             {
               method: "POST",
               headers: {
@@ -111,13 +111,16 @@ export default function TransactionsPage() {
 
   const handleSaveContext = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/chat/new-chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.access_token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/chat/new-chat`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to save context: ${response.statusText}`);

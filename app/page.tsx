@@ -18,7 +18,7 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/user-info/create",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user-info/create`,
         {
           method: "POST",
           headers: {

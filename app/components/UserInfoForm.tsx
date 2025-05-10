@@ -36,17 +36,19 @@ export default function UserInfoForm({
 }) {
   const { session } = useAuth();
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-
     try {
       if (!userInfo) {
-        const res = await fetch("http://localhost:8080/api/user-info/create", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.access_token}`,
-          },
-          body: JSON.stringify(data),
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/user-info/create`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.access_token}`,
+            },
+            body: JSON.stringify(data),
+          }
+        );
 
         if (!res.ok) {
           console.error("Failed to create user info");
@@ -57,14 +59,17 @@ export default function UserInfoForm({
         return;
       }
 
-      const res = await fetch("http://localhost:8080/api/user-info/update", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.access_token}`,
-        },
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user-info/update`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!res.ok) {
         console.error("Failed to update user info");

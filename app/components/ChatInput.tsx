@@ -3,11 +3,13 @@ import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Loader, LoaderCircle } from "lucide-react";
 
 export default function ChatInput({
+  isReceivingMessage,
   onSubmit,
 }: {
+  isReceivingMessage: boolean;
   onSubmit: (message: string) => void;
 }) {
   const [message, setMessage] = useState("");
@@ -37,8 +39,17 @@ export default function ChatInput({
         />
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button size="icon" className="rounded-full" onClick={handleSend}>
-          <ArrowUp />
+        <Button
+          disabled={isReceivingMessage}
+          size="icon"
+          className="rounded-full"
+          onClick={handleSend}
+        >
+          {isReceivingMessage ? (
+            <LoaderCircle className="rotate" />
+          ) : (
+            <ArrowUp />
+          )}
         </Button>
       </CardFooter>
     </Card>
