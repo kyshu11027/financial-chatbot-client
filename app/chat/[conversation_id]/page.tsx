@@ -19,9 +19,36 @@ export default function page() {
   const { session, loading } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
+  
   if (typeof conversation_id !== "string") {
     throw new Error("Invalid conversation ID");
+  }
+
+  const setUpEventSource = () => {
+    if (loading || !session?.access_token) return;
+  
+    const eventSource = new EventSource(
+      `http://localhost:8080/sse/${conversation_id}?token=${session.access_token}`
+    );
+  
+    eventSource.onmessage = (event) => {
+      const data = event.data;
+      console.log(`Received data:${data}`);
+      if (data) {
+        setMessages((prevMessages) => {
+          const updatedMessages = [...prevMessages];
+          const lastIndex = updatedMessages.length - 1;
+  
+          // Append to the message field of the last message
+          updatedMessages[lastIndex] = {
+            ...updatedMessages[lastIndex],
+            message: updatedMessages[lastIndex].message + data,
+          };
+  
+          return updatedMessages;
+        });
+      }
+    };
   }
 
   const scrollToBottom = () => {
@@ -57,7 +84,19 @@ export default function page() {
         }
 
         const data = await res.json();
+        console.log(data)
         setMessages(data);
+
+        const aiMessage: Message = {
+          conversation_id: conversation_id,
+          user_id: session?.user.id || "",
+          sender: "AIMessage",
+          message: "", // initially empty
+          timestamp: new Date().toISOString(),
+        };
+        setMessages((prevMessages) => {
+          return [...prevMessages, aiMessage];
+        });
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
@@ -67,6 +106,12 @@ export default function page() {
     setLoading(false);
   }, [session, loading]);
 
+  useEffect(() => {
+    if (loading || !session?.access_token || !conversation_id) return;
+
+    setUpEventSource();
+  }, [conversation_id, session?.access_token, loading]);
+  
   const onSubmit = (message: string) => {
     if (loading || !session?.access_token) {
       window.alert("Please try again.");
@@ -124,29 +169,7 @@ export default function page() {
       return [...prevMessages, userMessage, aiMessage];
     });
 
-    const eventSource = new EventSource(
-      `http://localhost:8080/sse/${conversation_id}?token=${session.access_token}`
-    );
-
-    eventSource.onmessage = (event) => {
-      const data = event.data;
-      console.log(`Received data:${data}`);
-      if (data) {
-        setMessages((prevMessages) => {
-          const updatedMessages = [...prevMessages];
-          const lastIndex = updatedMessages.length - 1;
-
-          // Append to the message field of the last message
-          updatedMessages[lastIndex] = {
-            ...updatedMessages[lastIndex],
-            message: updatedMessages[lastIndex].message + data,
-          };
-
-          return updatedMessages;
-        });
-      }
-    };
-
+    setUpEventSource()
     console.log("Message sent:", message);
   };
 
