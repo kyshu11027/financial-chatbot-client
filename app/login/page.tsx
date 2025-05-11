@@ -70,6 +70,7 @@ export default function LoginPage() {
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="bg-card-foreground"
                 />
               </div>
               <div>
@@ -84,6 +85,7 @@ export default function LoginPage() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="bg-card-foreground"
                 />
               </div>
             </div>
@@ -93,7 +95,10 @@ export default function LoginPage() {
             </Button>
           </form>
           <div className="mt-6 text-center">
-            <Link href="/signup" className="text-primary hover:text-primary/90">
+            <Link
+              href="/signup"
+              className="text-blue-500 hover:text-primary/90"
+            >
               Don't have an account? Sign up
             </Link>
           </div>

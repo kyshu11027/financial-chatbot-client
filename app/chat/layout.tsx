@@ -4,6 +4,7 @@ import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import { ChatSidebar } from "@/app/components/ChatSidebar";
 import { SidebarTrigger } from "@/app/components/SidebarButtons";
 import { useAuth } from "@/app/context/AuthContext";
+import { LogoButton } from "@/app/components/ToolbarButtons";
 import Conversation from "@/types/chat";
 
 export default function ChatLayout({
@@ -90,8 +91,10 @@ const SidebarWrapper = ({
         <ChatSidebar conversations={conversations} isLoading={false} />
       )}
       <div className="p-2 flex flex-col h-screen w-full">
-        <div className="min-h-12 pb-2 w-full flex flex-row items-center position-sticky top-0">
-          {shouldShowTrigger && <SidebarTrigger />}
+        <div className="min-h-12 px-3 pb-2 w-full flex flex-row items-center position-sticky top-0 border-b justify-between">
+          {shouldShowTrigger ? <SidebarTrigger /> : <div />}
+
+          <LogoButton />
         </div>
 
         {children}

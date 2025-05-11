@@ -83,12 +83,12 @@ export default function page() {
 
         <motion.div
           ref={chatInputRef} // Attach ref to the motion div
-          initial={{ y: 0 }} // Start at the top of the screen
+          initial={{ y: 0 }}
           animate={{
-            y: animateInput ? `calc(${distanceToBottom}px - 0.5rem)` : 0, // Animate based on distance to bottom
+            y: animateInput ? `${distanceToBottom}px` : 0, // Animate based on distance to bottom
           }}
           transition={{ duration: 0.5 }} // Smooth transition
-          className="flex flex-row justify-center w-full"
+          className="flex flex-row justify-center w-full pb-2"
         >
           <ChatInput
             isReceivingMessage={isReceivingMessage}

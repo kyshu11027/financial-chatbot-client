@@ -65,6 +65,7 @@ export default function SignupPage() {
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="bg-foreground"
                 />
               </div>
               <div>
@@ -79,6 +80,7 @@ export default function SignupPage() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="bg-foreground"
                 />
               </div>
             </div>
@@ -88,7 +90,7 @@ export default function SignupPage() {
             </Button>
           </form>
           <div className="mt-6 text-center">
-            <Link href="/login" className="text-primary hover:text-primary/90">
+            <Link href="/login" className="text-blue-500 hover:text-primary/90">
               Already have an account? Sign in
             </Link>
           </div>

@@ -31,7 +31,7 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
   const { conversation_id } = params;
   return (
     <Sidebar>
-      <SidebarHeader className="flex flex-row justify-between items-center gap-2">
+      <SidebarHeader className="flex flex-row drop-shadow-lg justify-between items-center gap-2">
         <SidebarTrigger />
         <div>
           <UserInfoDialog />
@@ -71,7 +71,7 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="mx-2 my-4">
+      <SidebarFooter className="mb-2 px-2 py-4">
         <PlaidLinkComponent />
       </SidebarFooter>
     </Sidebar>

@@ -149,7 +149,7 @@ export default function PlaidLinkComponent() {
     <Button
       variant="default"
       size="lg"
-      className="text-lg"
+      className="text-lg text-foreground"
       disabled={isLoading || !ready}
       onClick={() => open()}
     >

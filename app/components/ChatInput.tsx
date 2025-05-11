@@ -35,7 +35,7 @@ export default function ChatInput({
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="rounded-none h-[32px] px-0 py-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent resize-none"
+          className="rounded-none h-[32px] px-0 py-0 border-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent resize-none"
         />
       </CardContent>
       <CardFooter className="flex justify-end">

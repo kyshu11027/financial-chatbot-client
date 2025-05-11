@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground min-h-screen;
+  }
+
   :root {
     --radius: 0.5rem;
     --background: 220 14% 12%;
@@ -31,7 +38,6 @@
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
     --sidebar-background: 240 5.9% 10%;
@@ -45,12 +51,18 @@
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+@layer utilities {
+  /* Custom utility class */
+  .no-spinner {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
   }
-  body {
-    @apply bg-background text-foreground min-h-screen;
+
+  .no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }
 

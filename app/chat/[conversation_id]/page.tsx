@@ -100,7 +100,7 @@ export default function page() {
       );
 
       eventSource.onmessage = (event) => {
-        const data = event.data;
+        let data = event.data;
         if (data) {
           if (data === constants.END_MESSAGE_STRING) {
             setIsReceivingMessage(false);
