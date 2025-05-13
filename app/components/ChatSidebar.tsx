@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import {
   Sidebar,
@@ -18,7 +19,7 @@ import {
 } from "@/app/components/SidebarButtons";
 import UserInfoDialog from "@/app/components/UserInfoDialog";
 import PlaidLinkComponent from "@/app/components/PlaidLink";
-import Conversation from "@/types/chat";
+import { Conversation } from "@/types/conversations";
 import { useParams } from "next/navigation";
 
 interface SidebarProps {

@@ -1,3 +1,4 @@
+"use client";
 import { useCallback, useState, useEffect } from "react";
 import { PlaidLinkOnSuccess, usePlaidLink } from "react-plaid-link";
 import { useAuth } from "@/app/context/AuthContext";
