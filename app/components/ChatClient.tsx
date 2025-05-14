@@ -17,6 +17,7 @@ export default function ChatClient({
   const [isReceivingMessage, setIsReceivingMessage] = useState(false);
   const [messages, setMessages] = useState(serverMessages);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const latestMessageRef = useRef<Message | null>(null);
   const { conversation_id } = useParams();
   const { session, loading } = useAuth();
 
@@ -38,6 +39,9 @@ export default function ChatClient({
 
   useEffect(() => {
     scrollToBottom(true);
+    if (messages.length > 0) {
+      latestMessageRef.current = messages[messages.length - 1];
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -56,14 +60,41 @@ export default function ChatClient({
       );
 
       eventSource.onmessage = (event) => {
-        let data = event.data;
+        const data = event.data;
         if (data) {
-          if (data === constants.END_MESSAGE_STRING) {
+          const parsedData = JSON.parse(data);
+
+          console.log(parsedData);
+          const msg = parsedData.message;
+
+          if (msg === constants.ERROR_MESSAGE_STRING) {
+            setIsReceivingMessage(false);
+            window.alert(
+              "There was an issue generating your response. Please try again."
+            );
+            return;
+          }
+
+          if (msg === constants.END_MESSAGE_STRING) {
             setIsReceivingMessage(false);
             return;
           }
 
           setIsReceivingMessage(true);
+
+          // If we are redirected to this page from the new conversation workflow, a new AIMessage placeholder must be created
+          if (latestMessageRef.current?.sender === "UserMessage") {
+            const aiMessage: Message = {
+              conversation_id: conversation_id,
+              user_id: session?.user.id || "",
+              sender: "AIMessage",
+              message: "", // initially empty
+              timestamp: new Date().toISOString(),
+            };
+
+            setMessages((prevMessages) => [...prevMessages, aiMessage]);
+            latestMessageRef.current = aiMessage;
+          }
 
           setMessages((prevMessages) => {
             const updatedMessages = [...prevMessages];
@@ -71,7 +102,7 @@ export default function ChatClient({
 
             updatedMessages[lastIndex] = {
               ...updatedMessages[lastIndex],
-              message: updatedMessages[lastIndex].message + data,
+              message: updatedMessages[lastIndex].message + msg,
             };
 
             return updatedMessages;
@@ -80,7 +111,9 @@ export default function ChatClient({
       };
 
       eventSource.onerror = () => {
-        console.log("EventSource failed, retrying in 1s...");
+        console.log(
+          `EventSource failed, retrying in ${constants.SSE_TIMEOUT / 1000}s...`
+        );
         eventSource?.close();
         retryTimeout = setTimeout(setUpEventSource, constants.SSE_TIMEOUT); // Retry after 1 second
       };
@@ -127,13 +160,13 @@ export default function ChatClient({
     console.log("Message sent:", message);
   };
   return (
-    <div className="flex flex-col gap-5 justify-between items-center h-full">
+    <div className="flex flex-col justify-between items-center h-full">
       <div className="flex-grow overflow-x-hidden flex flex-col w-full max-w-[48rem] gap-5 px-6">
         {messages.map((message, index) =>
           message.sender === "UserMessage" ? (
             <div
               key={`${message.sender}-${message.timestamp}`}
-              className="max-w-1/2 ml-auto py-2.5 px-5 bg-secondary border rounded-3xl "
+              className="max-w-1/2 ml-auto mt-2 py-2.5 px-5 bg-secondary border rounded-3xl "
             >
               <p className="text-md">{message.message}</p>
             </div>

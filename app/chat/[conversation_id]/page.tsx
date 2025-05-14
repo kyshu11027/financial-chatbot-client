@@ -23,7 +23,7 @@ export default async function page({
   const messages = await fetchMessages(session.access_token, conversation_id);
 
   return (
-    <main className="h-[calc(100%-3rem)] pt-2 ">
+    <main className="h-[calc(100%-3rem)] ">
       <ChatClient serverMessages={messages} />
     </main>
   );
