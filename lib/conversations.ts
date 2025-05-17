@@ -78,3 +78,67 @@ export const sendMessage = async (
     return;
   }
 };
+
+export const updateTitle = async (
+  token: string,
+  conversation_id: string,
+  title: string
+) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/chat/conversation/update`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          conversation_id,
+          title,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to update title");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("Error updating title:", error);
+    window.alert("Please try again.");
+    return;
+  }
+};
+
+export const deleteConversation = async (
+  token: string,
+  conversation_id: string
+) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/chat/conversation/delete`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          conversation_id,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to update title");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("Error updating title:", error);
+    window.alert("Please try again.");
+    return;
+  }
+};

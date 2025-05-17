@@ -2,7 +2,7 @@
 import { Conversation } from "@/types/conversations";
 import { useSidebar } from "@/components/ui/sidebar";
 import { SidebarTrigger } from "@/app/components/SidebarButtons";
-import { LogoButton } from "@/app/components/ToolbarButtons";
+import ProfileDropdown from "@/app/components/ProfileDropdown";
 import { useEffect, useState } from "react";
 import { ChatSidebar } from "@/app/components/ChatSidebar";
 
@@ -40,7 +40,7 @@ export default function SidebarWrapper({
         <div className="min-h-12 px-3 pb-2 w-full flex flex-row items-center position-sticky top-0 border-b justify-between">
           {shouldShowTrigger ? <SidebarTrigger /> : <div />}
 
-          <LogoButton />
+          <ProfileDropdown />
         </div>
 
         {children}

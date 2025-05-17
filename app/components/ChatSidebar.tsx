@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   Sidebar,
@@ -20,7 +22,9 @@ import {
 import UserInfoDialog from "@/app/components/UserInfoDialog";
 import PlaidLinkComponent from "@/app/components/PlaidLink";
 import { Conversation } from "@/types/conversations";
-import { useParams } from "next/navigation";
+import ConversationDropdown from "./ConversationDropdown";
+import { useAuth } from "@/app/context/AuthContext";
+import { updateTitle } from "@/lib/conversations";
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -30,6 +34,32 @@ interface SidebarProps {
 export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
   const params = useParams();
   const { conversation_id } = params;
+  const [conversationsClient, setConversations] =
+    useState<Conversation[]>(conversations);
+  const [editingId, setEditingId] = useState<string>("");
+  const [editingTitle, setEditingTitle] = useState<string>("");
+  const { session, loading } = useAuth();
+
+  const handleEditing = (conversation: Conversation) => {
+    setEditingId(conversation.id);
+    setEditingTitle(conversation.title);
+  };
+
+  const handleSave = async (conversation: Conversation, title: string) => {
+    if (!session || loading) return;
+    setConversations((prev) =>
+      prev.map((conv) =>
+        conv.id === conversation.id ? { ...conv, title: title } : conv
+      )
+    );
+    setEditingId("");
+    if (conversation.title === title) {
+      return;
+    }
+
+    await updateTitle(session.access_token, conversation.id, title);
+  };
+
   return (
     <Sidebar>
       <SidebarHeader className="flex flex-row drop-shadow-lg justify-between items-center gap-2">
@@ -53,7 +83,7 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
               </SidebarMenu>
             ) : (
               <SidebarMenu>
-                {[...conversations]
+                {[...conversationsClient]
                   .reverse()
                   .map((conversation: Conversation) => (
                     <SidebarMenuItem key={conversation.id}>
@@ -62,7 +92,42 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
                         isActive={conversation.id === conversation_id}
                       >
                         <Link href={`/chat/${conversation.id}`}>
-                          <span>{conversation.title}</span>
+                          {editingId === conversation.id ? (
+                            <div
+                              contentEditable
+                              suppressContentEditableWarning
+                              onBlur={(e) =>
+                                handleSave(
+                                  conversation,
+                                  e.currentTarget.textContent || ""
+                                )
+                              }
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  e.currentTarget.blur(); // Trigger onBlur to exit editing
+                                }
+                              }}
+                              autoFocus
+                              className="bg-transparent cursor-text"
+                            >
+                              {editingTitle}
+                            </div>
+                          ) : (
+                            <div
+                              onDoubleClick={() => handleEditing(conversation)}
+                              className="truncate w-full flex flex-row justify-between align-middle items-center"
+                            >
+                              <span className="w-full truncate align-middle">
+                                {conversation.title}
+                              </span>
+                              <ConversationDropdown
+                                handleEditing={handleEditing}
+                                conversation={conversation}
+                                setConversations={setConversations}
+                              />
+                            </div>
+                          )}
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

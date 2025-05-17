@@ -80,7 +80,7 @@ export default function SignupPage() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-foreground"
+                  className="bg-foreground text-black"
                 />
               </div>
             </div>
@@ -90,7 +90,10 @@ export default function SignupPage() {
             </Button>
           </form>
           <div className="mt-6 text-center">
-            <Link href="/login" className="text-blue-500 hover:text-primary/90">
+            <Link
+              href="/login"
+              className="text-blue-500 hover:text-blue-500/90"
+            >
               Already have an account? Sign in
             </Link>
           </div>
