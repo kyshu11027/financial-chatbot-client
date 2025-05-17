@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -39,6 +39,11 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
   const [editingId, setEditingId] = useState<string>("");
   const [editingTitle, setEditingTitle] = useState<string>("");
   const { session, loading } = useAuth();
+
+  // Sync local state with new props
+  useEffect(() => {
+    setConversations(conversations);
+  }, [conversations]);
 
   const handleEditing = (conversation: Conversation) => {
     setEditingId(conversation.id);

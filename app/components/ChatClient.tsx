@@ -64,7 +64,6 @@ export default function ChatClient({
         if (data) {
           const parsedData = JSON.parse(data);
 
-          console.log(parsedData);
           const msg = parsedData.message;
 
           if (msg === constants.ERROR_MESSAGE_STRING) {
@@ -156,8 +155,6 @@ export default function ChatClient({
     setMessages((prevMessages) => {
       return [...prevMessages, userMessage, aiMessage];
     });
-
-    console.log("Message sent:", message);
   };
   return (
     <div className="flex flex-col justify-between items-center h-full">

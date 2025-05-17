@@ -55,7 +55,6 @@ export default function UserInfoForm({
           return;
         }
 
-        console.log("User info created");
         return;
       }
 

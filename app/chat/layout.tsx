@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import SidebarWrapper from "@/app/components/SidebarWrapper";
 import { createClient } from "@/utils/supabase/server";
