@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,7 @@ import { Conversation } from "@/types/conversations";
 import { deleteConversation } from "@/lib/conversations";
 import { useAuth } from "../context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
+import { LoaderCircle } from "lucide-react";
 
 export default function DeleteConversationDialog({
   isDeleteDialogOpen,
@@ -32,9 +33,10 @@ export default function DeleteConversationDialog({
       ? params.conversation_id
       : undefined;
 
-  const cancelBtnRef = React.useRef<HTMLButtonElement>(null);
+  const cancelBtnRef = useRef<HTMLButtonElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isDeleteDialogOpen && cancelBtnRef.current) {
       cancelBtnRef.current.focus();
     }
@@ -43,6 +45,7 @@ export default function DeleteConversationDialog({
   const handleDelete = async () => {
     if (!session || loading) return;
 
+    setIsLoading(true);
     await deleteConversation(session.access_token, conversation.id);
 
     if (conversation_id === conversation.id) {
@@ -53,7 +56,7 @@ export default function DeleteConversationDialog({
     setConversations((prev) =>
       prev.filter((conv) => conv.id !== conversation.id)
     );
-
+    setIsLoading(false);
     setDeleteDialogOpen(false);
   };
 
@@ -71,8 +74,13 @@ export default function DeleteConversationDialog({
           <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={handleDelete}>
-            Delete
+          <Button
+            disabled={isLoading}
+            variant="destructive"
+            onClick={handleDelete}
+            className="min-w-[75px]"
+          >
+            {isLoading ? <LoaderCircle className="animate-spin" /> : "Delete"}
           </Button>
         </DialogFooter>
       </DialogContent>

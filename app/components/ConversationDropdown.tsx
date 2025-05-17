@@ -31,7 +31,7 @@ export default function ConversationDropdown({
   };
 
   return (
-    <>
+    <div onClick={(e) => e.stopPropagation()}>
       <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <DropdownMenuTrigger className="p-1 outline-none">
           <Ellipsis size={16} />
@@ -63,6 +63,6 @@ export default function ConversationDropdown({
         conversation={conversation}
         setConversations={setConversations}
       />
-    </>
+    </div>
   );
 }
