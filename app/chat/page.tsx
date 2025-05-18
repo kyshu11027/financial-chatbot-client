@@ -60,7 +60,7 @@ export default function page() {
         const { conversation_id } = data;
 
         router.push(`/chat/${conversation_id}`);
-        setTimeout(() => router.refresh(), 500);
+        router.refresh();
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
