@@ -88,55 +88,53 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
               </SidebarMenu>
             ) : (
               <SidebarMenu>
-                {[...conversationsClient]
-                  .reverse()
-                  .map((conversation: Conversation) => (
-                    <SidebarMenuItem key={conversation.id}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={conversation.id === conversation_id}
-                      >
-                        <Link href={`/chat/${conversation.id}`}>
-                          {editingId === conversation.id ? (
-                            <div
-                              contentEditable
-                              suppressContentEditableWarning
-                              onBlur={(e) =>
-                                handleSave(
-                                  conversation,
-                                  e.currentTarget.textContent || ""
-                                )
+                {conversationsClient.map((conversation: Conversation) => (
+                  <SidebarMenuItem key={conversation.id}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={conversation.id === conversation_id}
+                    >
+                      <Link href={`/chat/${conversation.id}`}>
+                        {editingId === conversation.id ? (
+                          <div
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={(e) =>
+                              handleSave(
+                                conversation,
+                                e.currentTarget.textContent || ""
+                              )
+                            }
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                e.currentTarget.blur(); // Trigger onBlur to exit editing
                               }
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  e.preventDefault();
-                                  e.currentTarget.blur(); // Trigger onBlur to exit editing
-                                }
-                              }}
-                              autoFocus
-                              className="bg-transparent cursor-text"
-                            >
-                              {editingTitle}
-                            </div>
-                          ) : (
-                            <div
-                              onDoubleClick={() => handleEditing(conversation)}
-                              className="truncate w-full flex flex-row justify-between align-middle items-center"
-                            >
-                              <span className="w-full truncate align-middle">
-                                {conversation.title}
-                              </span>
-                              <ConversationDropdown
-                                handleEditing={handleEditing}
-                                conversation={conversation}
-                                setConversations={setConversations}
-                              />
-                            </div>
-                          )}
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
+                            }}
+                            autoFocus
+                            className="bg-transparent cursor-text"
+                          >
+                            {editingTitle}
+                          </div>
+                        ) : (
+                          <div
+                            onDoubleClick={() => handleEditing(conversation)}
+                            className="truncate w-full flex flex-row justify-between align-middle items-center"
+                          >
+                            <span className="w-full truncate align-middle">
+                              {conversation.title}
+                            </span>
+                            <ConversationDropdown
+                              handleEditing={handleEditing}
+                              conversation={conversation}
+                              setConversations={setConversations}
+                            />
+                          </div>
+                        )}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
               </SidebarMenu>
             )}
           </SidebarGroupContent>

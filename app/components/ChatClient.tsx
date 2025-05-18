@@ -110,7 +110,7 @@ export default function ChatClient({
       };
 
       eventSource.onerror = () => {
-        console.log(
+        console.error(
           `EventSource failed, retrying in ${constants.SSE_TIMEOUT / 1000}s...`
         );
         eventSource?.close();

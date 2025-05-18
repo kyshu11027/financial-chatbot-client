@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,9 +20,10 @@ import { useAuth } from "@/app/context/AuthContext";
 
 export default function UserInfoDialog() {
   const { userInfo } = useAuth();
+  const [openDialog, setOpenDialog] = useState(false);
 
   return (
-    <Dialog>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <TooltipProvider>
         <Tooltip>
           <DialogTrigger asChild>
@@ -37,7 +39,7 @@ export default function UserInfoDialog() {
         </Tooltip>
       </TooltipProvider>
 
-      <DialogContent>
+      <DialogContent className="max-h-[75vh] overflow-scroll">
         <DialogHeader>
           <DialogTitle>My Financial Information & Goals</DialogTitle>
           <DialogDescription>
@@ -45,7 +47,7 @@ export default function UserInfoDialog() {
             financial advice.
           </DialogDescription>
         </DialogHeader>
-        <UserInfoForm userInfo={userInfo} />
+        <UserInfoForm userInfo={userInfo} setOpenDialog={setOpenDialog} />
       </DialogContent>
     </Dialog>
   );
