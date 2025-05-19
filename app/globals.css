@@ -131,10 +131,9 @@
   padding-left: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
   list-style-type: disc;
-  list-style-position: inside;
-  margin-top: 0;
+  margin-top: 1rem;
   margin-bottom: 0;
 }
 
@@ -143,7 +142,8 @@
   font-size: 1rem;
 }
 
-.markdown-text ol > li > span {
+.markdown-text ul > li > span,
+ol > li > span {
   display: flex;
   flex-direction: column;
 }
