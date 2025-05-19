@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
 import { sendMessage } from "@/lib/conversations";
 import constants from "@/types/constants";
-import ReactMarkdown from "react-markdown";
+import AIOutput from "@/app/components/AIOutput";
 
 export default function ChatClient({
   serverMessages,
@@ -168,23 +168,11 @@ export default function ChatClient({
               <p className="text-md">{message.message}</p>
             </div>
           ) : (
-            <div key={message.timestamp} className="max-w-3/4 mr-auto p-4 ">
+            <div key={message.timestamp} className="max-w-3/4 mr-auto">
               {isReceivingMessage && index === messages.length - 1 ? (
                 <Skeleton className="h-4 w-4 bg-foreground rounded-full" />
               ) : (
-                <ReactMarkdown
-                  components={{
-                    p: ({ node, ...props }) => (
-                      <p style={{ marginBottom: "1.5em" }} {...props} />
-                    ),
-                    li: ({ node, ...props }) => (
-                      <li style={{ marginBottom: "1.5em" }} {...props} />
-                    ),
-                    br: () => <br style={{ marginBottom: "1em" }} />,
-                  }}
-                >
-                  {message.message}
-                </ReactMarkdown>
+                <AIOutput message={message} />
               )}
             </div>
           )

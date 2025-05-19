@@ -102,3 +102,48 @@
 .rotate {
   animation: rotate 1s linear infinite;
 }
+
+.katex-mathml {
+  position: absolute;
+  bottom: 0px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.markdown-text ol {
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  list-style-type: decimal;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-text ul {
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style-type: disc;
+  list-style-position: inside;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-text p {
+  line-height: 1.625;
+  font-size: 1rem;
+}
+
+.markdown-text ol > li > span {
+  display: flex;
+  flex-direction: column;
+}
