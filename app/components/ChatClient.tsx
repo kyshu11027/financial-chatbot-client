@@ -17,7 +17,9 @@ export default function ChatClient({
   const [isReceivingMessage, setIsReceivingMessage] = useState(false);
   const [messages, setMessages] = useState(serverMessages);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const latestMessageRef = useRef<Message | null>(null);
+  const latestMessageRef = useRef<Message | null>(
+    serverMessages.length > 0 ? serverMessages[serverMessages.length - 1] : null
+  );
   const { conversation_id } = useParams();
   const { session, loading } = useAuth();
 
@@ -39,9 +41,6 @@ export default function ChatClient({
 
   useEffect(() => {
     scrollToBottom(true);
-    if (messages.length > 0) {
-      latestMessageRef.current = messages[messages.length - 1];
-    }
   }, [messages]);
 
   useEffect(() => {
@@ -91,8 +90,10 @@ export default function ChatClient({
               timestamp: new Date().toISOString(),
             };
 
-            setMessages((prevMessages) => [...prevMessages, aiMessage]);
-            latestMessageRef.current = aiMessage;
+            setMessages((prev) => {
+              latestMessageRef.current = aiMessage;
+              return [...prev, aiMessage];
+            });
           }
 
           setMessages((prevMessages) => {
@@ -153,6 +154,7 @@ export default function ChatClient({
 
     // Add the placeholder message and get its index
     setMessages((prevMessages) => {
+      latestMessageRef.current = aiMessage;
       return [...prevMessages, userMessage, aiMessage];
     });
   };
