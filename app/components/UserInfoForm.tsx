@@ -121,7 +121,7 @@ export default function UserInfoForm({
             <FormItem>
               <FormLabel>Monthly Income</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <Input className="no-spinner" type="number" {...field} />
               </FormControl>
               <FormDescription>Your monthly income in dollars</FormDescription>
               <FormMessage />
@@ -136,7 +136,7 @@ export default function UserInfoForm({
             <FormItem>
               <FormLabel>Monthly Savings Goal</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <Input className="no-spinner" type="number" {...field} />
               </FormControl>
               <FormDescription>
                 Your monthly savings goal in dollars
@@ -180,7 +180,11 @@ export default function UserInfoForm({
                     <FormItem>
                       <FormLabel>Amount ($)</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input
+                          className="no-spinner"
+                          type="number"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
