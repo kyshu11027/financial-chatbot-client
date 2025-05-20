@@ -6,6 +6,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground min-h-screen;
   }
@@ -39,6 +40,7 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
   }
+
   .dark {
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -52,98 +54,67 @@
 }
 
 @layer utilities {
-  /* Custom utility class */
   .no-spinner {
-    appearance: textfield;
-    -moz-appearance: textfield;
-    -webkit-appearance: none;
+    @apply appearance-none;
   }
 
   .no-spinner::-webkit-inner-spin-button,
   .no-spinner::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    @apply appearance-none m-0;
+  }
+
+  .rotate {
+    @apply animate-spin;
   }
 }
 
-*::-webkit-scrollbar {
-  width: 8px;
-  background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.2
-  ); /* Or any semi-transparent color */
-  border-radius: 4px;
-}
-
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-* {
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-  scrollbar-width: thin;
-}
-
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
+/* Scrollbar styles (no pure Tailwind equivalent yet, so use plugin or keep raw CSS) */
+@layer utilities {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
   }
-  100% {
-    transform: rotate(360deg);
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
   }
 }
 
-.rotate {
-  animation: rotate 1s linear infinite;
-}
-
+/* KaTeX screen-reader-friendly style */
 .katex-mathml {
-  position: absolute;
-  bottom: 0px;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
+  @apply absolute top-0 w-px h-px p-0 m-0 overflow-hidden whitespace-nowrap border-0;
   clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
-.markdown-text ol {
-  padding-left: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  list-style-type: decimal;
-  font-weight: 500;
-  margin-top: 0;
-  margin-bottom: 0;
-}
+/* Markdown content styling */
+@layer components {
+  .markdown-text ol {
+    @apply pl-10 flex flex-col gap-3 list-decimal font-medium m-0;
+  }
 
-.markdown-text ul {
-  padding-left: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  list-style-type: disc;
-}
+  .markdown-text ul {
+    @apply pl-10 flex flex-col gap-4 list-disc;
+  }
 
-.markdown-text p {
-  line-height: 1.625;
-  font-size: 1rem;
-}
+  .markdown-text p {
+    @apply leading-relaxed text-base;
+  }
 
-.markdown-text li > * + * {
-  margin-top: 1rem;
-}
+  .markdown-text li > * + * {
+    @apply mt-4;
+  }
 
-.markdown-text h3 {
-  font-size: 1.25rem;
+  .markdown-text h3 {
+    @apply text-xl font-bold mt-4;
+  }
 }
