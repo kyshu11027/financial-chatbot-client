@@ -70,7 +70,7 @@ export default function LoginPage() {
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-card-foreground"
+                  className="bg-card-foreground text-black"
                 />
               </div>
               <div>

@@ -65,7 +65,7 @@ export default function SignupPage() {
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-foreground"
+                  className="bg-foreground text-black"
                 />
               </div>
               <div>
