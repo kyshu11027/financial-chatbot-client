@@ -120,7 +120,7 @@ export default function PlaidLinkComponent() {
   };
 
   const { open, ready, error } = usePlaidLink(config);
-  if (loading) {
+  if (loading || !linkToken) {
     return (
       <div className="flex items-center justify-center space-x-2">
         <Loader2 className="h-4 w-4 animate-spin" />
@@ -133,15 +133,6 @@ export default function PlaidLinkComponent() {
     return (
       <div className="text-center text-muted-foreground">
         Please log in to connect your bank account
-      </div>
-    );
-  }
-
-  if (!linkToken) {
-    return (
-      <div className="flex items-center justify-center space-x-2">
-        <Loader2 className="h-4 w-4 animate-spin" />
-        <span>Preparing Plaid connection...</span>
       </div>
     );
   }

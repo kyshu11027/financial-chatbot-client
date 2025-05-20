@@ -81,30 +81,31 @@ export default function ChatClient({
           setIsReceivingMessage(true);
 
           // If we are redirected to this page from the new conversation workflow, a new AIMessage placeholder must be created
-          if (latestMessageRef.current?.sender === "UserMessage") {
-            const aiMessage: Message = {
-              conversation_id: conversation_id,
-              user_id: session?.user.id || "",
-              sender: "AIMessage",
-              message: "", // initially empty
-              timestamp: new Date().toISOString(),
-            };
-
-            setMessages((prev) => {
-              latestMessageRef.current = aiMessage;
-              return [...prev, aiMessage];
-            });
-          }
-
           setMessages((prevMessages) => {
             const updatedMessages = [...prevMessages];
             const lastIndex = updatedMessages.length - 1;
+            const lastMessage = updatedMessages[lastIndex];
 
+            // If last message is not an AI message, append one
+            if (lastMessage?.sender !== "AIMessage") {
+              const aiMessage: Message = {
+                conversation_id: conversation_id,
+                user_id: session?.user.id || "",
+                sender: "AIMessage",
+                message: "", // initially empty
+                timestamp: new Date().toISOString(),
+              };
+              latestMessageRef.current = aiMessage;
+              return [...updatedMessages, aiMessage];
+            }
+
+            // Otherwise, append new chunk to last AI message
             updatedMessages[lastIndex] = {
-              ...updatedMessages[lastIndex],
-              message: updatedMessages[lastIndex].message + msg,
+              ...lastMessage,
+              message: lastMessage.message + msg,
             };
 
+            latestMessageRef.current = updatedMessages[lastIndex];
             return updatedMessages;
           });
         }

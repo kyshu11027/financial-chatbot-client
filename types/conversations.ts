@@ -1,7 +1,7 @@
 export interface Conversation {
   id: string;
   title: string;
-  createdAt: Number;
+  createdAt: string;
 }
 
 export interface Message {

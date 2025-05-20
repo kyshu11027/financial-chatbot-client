@@ -117,7 +117,7 @@
 }
 
 .markdown-text ol {
-  padding-left: 1.25rem;
+  padding-left: 2.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -128,7 +128,7 @@
 }
 
 .markdown-text ul {
-  padding-left: 1.25rem;
+  padding-left: 2.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -140,7 +140,10 @@
   font-size: 1rem;
 }
 
-.markdown-text li > ul,
-li > p {
+.markdown-text li > * + * {
   margin-top: 1rem;
+}
+
+.markdown-text h3 {
+  font-size: 1.25rem;
 }
