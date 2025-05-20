@@ -230,9 +230,21 @@ export default function UserInfoForm({
           </div>
         </div>
 
-        <Button disabled={isLoading} type="submit" className="min-w-[80px]">
-          {isLoading ? <LoaderCircle className="animate-spin" /> : "Submit"}
-        </Button>
+        <div className="flex flex-row gap-3 justify-end">
+          <Button
+            variant="outline"
+            className="min-w-[80px]"
+            type="reset"
+            onClick={() => {
+              setOpenDialog(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button disabled={isLoading} type="submit" className="min-w-[80px]">
+            {isLoading ? <LoaderCircle className="animate-spin" /> : "Submit"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

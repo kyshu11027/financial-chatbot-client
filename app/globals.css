@@ -133,8 +133,6 @@
   flex-direction: column;
   gap: 1rem;
   list-style-type: disc;
-  margin-top: 1rem;
-  margin-bottom: 0;
 }
 
 .markdown-text p {
@@ -142,8 +140,7 @@
   font-size: 1rem;
 }
 
-.markdown-text ul > li > span,
-ol > li > span {
-  display: flex;
-  flex-direction: column;
+.markdown-text li > ul,
+li > p {
+  margin-top: 1rem;
 }

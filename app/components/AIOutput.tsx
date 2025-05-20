@@ -12,15 +12,8 @@ const remarkMathOptions: Options = {
 
 export default function AIOutput({ message }: { message: Message }) {
   return (
-    <div className="markdown-text prose prose-sm flex flex-col gap-5 leading-snug whitespace-pre-wrap">
+    <div className="markdown-text prose prose-sm flex flex-col gap-5 leading-snug ">
       <ReactMarkdown
-        components={{
-          li: ({ node, children, ...props }) => (
-            <li {...props}>
-              <span> {children}</span>
-            </li>
-          ),
-        }}
         remarkPlugins={[[remarkMath, remarkMathOptions]]}
         rehypePlugins={[rehypeKatex]}
       >

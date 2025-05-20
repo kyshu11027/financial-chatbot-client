@@ -169,7 +169,9 @@ export default function ChatClient({
             </div>
           ) : (
             <div key={message.timestamp} className="max-w-3/4 mr-auto">
-              {isReceivingMessage && index === messages.length - 1 ? (
+              {isReceivingMessage &&
+              index === messages.length - 1 &&
+              message.message === "" ? (
                 <Skeleton className="h-4 w-4 bg-foreground rounded-full" />
               ) : (
                 <AIOutput message={message} />
