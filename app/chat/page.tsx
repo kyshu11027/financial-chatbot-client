@@ -1,9 +1,10 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import ChatInput from "@/app/components/ChatInput";
+import { createNewConversation } from "@/lib/conversations";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion"; // Import framer-motion
+import { motion } from "framer-motion";
 
 export default function page() {
   const [isReceivingMessage, setIsReceivingMessage] = useState(false);
@@ -32,40 +33,16 @@ export default function page() {
     };
   }, []);
 
-  const onSubmit = (message: string) => {
-    const createConversation = async () => {
-      if (loading || !session?.access_token) return;
-      try {
-        setAnimateInput(true);
-        setIsReceivingMessage(true);
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/chat/conversation/new`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({
-              message,
-            }),
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch messages info");
-        }
-
-        const data = await res.json();
-        const { conversation_id } = data;
-
-        router.push(`/chat/${conversation_id}`);
-        router.refresh();
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
-    createConversation();
+  const onSubmit = async (message: string) => {
+    if (loading || !session?.access_token) return;
+    setAnimateInput(true);
+    setIsReceivingMessage(true);
+    const conversation_id = await createNewConversation(
+      message,
+      session?.access_token
+    );
+    router.push(`/chat/${conversation_id}?new=true`); // Pass query param indicating a new chat was created
+    router.refresh();
   };
 
   return (

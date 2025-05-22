@@ -3,7 +3,7 @@ import { useRef, useEffect, useState, useLayoutEffect } from "react";
 import ChatInput from "@/app/components/ChatInput";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Message } from "@/types/conversations";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
 import { sendMessage } from "@/lib/conversations";
 import constants from "@/types/constants";
@@ -22,6 +22,7 @@ export default function ChatClient({
   );
   const { conversation_id } = useParams();
   const { session, loading } = useAuth();
+  const searchParams = useSearchParams();
 
   if (typeof conversation_id !== "string") {
     throw new Error("Invalid conversation ID");
@@ -34,6 +35,30 @@ export default function ChatClient({
       });
     }
   };
+
+  useEffect(() => {
+    if (searchParams.get("new") === "true") {
+      setIsReceivingMessage(true);
+      const aiMessage: Message = {
+        conversation_id: conversation_id,
+        user_id: session?.user.id || "",
+        sender: "AIMessage",
+        message: "", // initially empty
+        timestamp: new Date().toISOString(),
+      };
+
+      // Add the placeholder message
+      setMessages((prevMessages) => {
+        latestMessageRef.current = aiMessage;
+        return [...prevMessages, aiMessage];
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      params.delete("new");
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.replaceState({}, "", newUrl);
+    }
+  }, []);
 
   useLayoutEffect(() => {
     scrollToBottom(false);
@@ -165,7 +190,7 @@ export default function ChatClient({
         {messages.map((message, index) =>
           message.sender === "UserMessage" ? (
             <div
-              key={`${message.sender}-${message.timestamp}`}
+              key={`${message.sender}-${message.timestamp}-${index}`}
               className="max-w-1/2 ml-auto mt-2 py-2.5 px-5 bg-secondary border rounded-3xl "
             >
               <p className="text-md">{message.message}</p>

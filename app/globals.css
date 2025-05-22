@@ -117,4 +117,13 @@
   .markdown-text h3 {
     @apply text-xl font-bold mt-4;
   }
+
+  .markdown-text table {
+    @apply border-collapse w-full text-sm;
+  }
+
+  .markdown-text th,
+  .markdown-text td {
+    @apply border-[1px] border-solid border-foreground px-2 py-1;
+  }
 }

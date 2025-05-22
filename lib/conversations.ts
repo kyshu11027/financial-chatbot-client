@@ -142,3 +142,33 @@ export const deleteConversation = async (
     return;
   }
 };
+
+export const createNewConversation = async (
+  message: string,
+  accessToken: string
+): Promise<string> => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/chat/conversation/new`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ message }),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to create conversation");
+    }
+
+    const data = await res.json();
+    return data.conversation_id;
+  } catch (error) {
+    console.error("Error updating title:", error);
+    window.alert("Please try again.");
+    return "";
+  }
+};
