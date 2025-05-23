@@ -33,7 +33,7 @@ export default function SignupPage() {
       // Wait for a moment to ensure the session is properly set
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setSession(data.session);
-      router.push("/");
+      router.push("/signup/confirm");
     } catch (error: any) {
       setError(error.message);
     }
