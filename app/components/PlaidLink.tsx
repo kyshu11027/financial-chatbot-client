@@ -7,61 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
 export default function PlaidLinkComponent() {
-  const [linkToken, setLinkToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const { session, loading } = useAuth();
-  const { refreshItems } = usePlaid();
-
-  useEffect(() => {
-    const fetchLinkToken = async () => {
-      try {
-        if (loading) {
-          return;
-        }
-
-        if (!session?.access_token) {
-          return;
-        }
-
-        // Check if linkToken is already available
-        if (linkToken) return;
-
-        setIsLoading(true);
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/plaid/link-token/create`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({
-              user_id: session.user.id,
-            }),
-          }
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => null);
-          console.error("Link token fetch failed:", {
-            status: response.status,
-            statusText: response.statusText,
-            error: errorData,
-          });
-          throw new Error(`Failed to fetch link token: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        setLinkToken(data.link_token);
-      } catch (error) {
-        console.error("Error fetching link token:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchLinkToken();
-  }, [session, loading, linkToken]); // Added linkToken to dependency array
+  const [isLoading, setIsLoading] = useState(false);
+  const { linkToken, refreshItems } = usePlaid();
 
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token, metadata) => {

@@ -71,7 +71,11 @@ export default function DeleteConversationDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+          <Button
+            variant="outline"
+            onClick={() => setDeleteDialogOpen(false)}
+            ref={cancelBtnRef}
+          >
             Cancel
           </Button>
           <Button

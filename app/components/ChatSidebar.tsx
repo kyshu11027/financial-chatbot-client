@@ -94,44 +94,45 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
                       asChild
                       isActive={conversation.id === conversation_id}
                     >
-                      <Link href={`/chat/${conversation.id}`}>
-                        {editingId === conversation.id ? (
-                          <div
-                            contentEditable
-                            suppressContentEditableWarning
-                            onBlur={(e) =>
-                              handleSave(
-                                conversation,
-                                e.currentTarget.textContent || ""
-                              )
+                      {editingId === conversation.id ? (
+                        <div
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={(e) =>
+                            handleSave(
+                              conversation,
+                              e.currentTarget.textContent || ""
+                            )
+                          }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              e.currentTarget.blur(); // Trigger onBlur to exit editing
                             }
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                e.preventDefault();
-                                e.currentTarget.blur(); // Trigger onBlur to exit editing
-                              }
-                            }}
-                            autoFocus
-                            className="bg-transparent cursor-text"
+                          }}
+                          autoFocus
+                          className="bg-transparent cursor-text"
+                        >
+                          {editingTitle}
+                        </div>
+                      ) : (
+                        <div
+                          onDoubleClick={() => handleEditing(conversation)}
+                          className="truncate w-full flex flex-row justify-between align-middle items-center"
+                        >
+                          <Link
+                            className="w-full truncate align-middle"
+                            href={`/chat/${conversation.id}`}
                           >
-                            {editingTitle}
-                          </div>
-                        ) : (
-                          <div
-                            onDoubleClick={() => handleEditing(conversation)}
-                            className="truncate w-full flex flex-row justify-between align-middle items-center"
-                          >
-                            <span className="w-full truncate align-middle">
-                              {conversation.title}
-                            </span>
-                            <ConversationDropdown
-                              handleEditing={handleEditing}
-                              conversation={conversation}
-                              setConversations={setConversations}
-                            />
-                          </div>
-                        )}
-                      </Link>
+                            <span>{conversation.title}</span>
+                          </Link>
+                          <ConversationDropdown
+                            handleEditing={handleEditing}
+                            conversation={conversation}
+                            setConversations={setConversations}
+                          />
+                        </div>
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

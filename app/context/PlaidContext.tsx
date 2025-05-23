@@ -1,27 +1,14 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
+import { PlaidItem } from "@/types/plaid";
+import { getPlaidLinkToken, getPlaidItems } from "@/lib/plaid";
 import { useAuth } from "./AuthContext";
-
-interface PlaidItem {
-  ID: string;
-  UserID: string;
-  AccessToken: string;
-  ItemID: string;
-  Status: string;
-  CreatedAt: {
-    Time: string;
-    Valid: boolean;
-  };
-  UpdatedAt: {
-    Time: string;
-    Valid: boolean;
-  };
-}
 
 interface PlaidContextType {
   items: PlaidItem[];
   loading: boolean;
+  linkToken: string | null;
   error: string | null;
   refreshItems: () => Promise<void>;
 }
@@ -29,6 +16,7 @@ interface PlaidContextType {
 const PlaidContext = createContext<PlaidContextType>({
   items: [],
   loading: true,
+  linkToken: null,
   error: null,
   refreshItems: async () => {},
 });
@@ -36,54 +24,46 @@ const PlaidContext = createContext<PlaidContextType>({
 export function PlaidProvider({ children }: { children: React.ReactNode }) {
   const { session } = useAuth();
   const [items, setItems] = useState<PlaidItem[]>([]);
+  const [linkToken, setLinkToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchItems = async () => {
     try {
-      if (!session?.access_token) {
-        setItems([]);
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/plaid/item/list`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            user_id: session.user.id,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch Plaid items");
-      }
-
-      const data = await response.json();
-      setItems(data.items);
-    } catch (error) {
-      console.error("Error fetching Plaid items:", error);
+      const items = await getPlaidItems(session);
+      setItems(items);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching Plaid items:", err);
       setError(
-        error instanceof Error ? error.message : "Failed to fetch Plaid items"
+        err instanceof Error ? err.message : "Failed to fetch Plaid items"
       );
-    } finally {
-      setLoading(false);
+      setItems([]);
+    }
+  };
+
+  const fetchLinkToken = async () => {
+    try {
+      const token = await getPlaidLinkToken(session);
+      setLinkToken(token);
+    } catch (err) {
+      console.error("Error fetching Plaid link token:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch Plaid link token"
+      );
+      setLinkToken(null);
     }
   };
 
   useEffect(() => {
     fetchItems();
+    fetchLinkToken();
+    setLoading(false);
   }, [session]);
 
   return (
     <PlaidContext.Provider
-      value={{ items, loading, error, refreshItems: fetchItems }}
+      value={{ items, loading, error, linkToken, refreshItems: fetchItems }}
     >
       {children}
     </PlaidContext.Provider>

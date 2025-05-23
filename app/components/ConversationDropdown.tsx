@@ -23,11 +23,8 @@ export default function ConversationDropdown({
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const onDeleteClick = () => {
-    setDropdownOpen(false); // close dropdown first
-    // open dialog in next tick so dropdown is definitely closed
-    setTimeout(() => {
-      setDeleteDialogOpen(true);
-    }, 0);
+    setDropdownOpen(false);
+    setDeleteDialogOpen(true);
   };
 
   return (
