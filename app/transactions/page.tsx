@@ -69,14 +69,14 @@ export default function TransactionsPage() {
                 Authorization: `Bearer ${session.access_token}`,
               },
               body: JSON.stringify({
-                access_token: item.AccessToken,
+                access_token: item.access_token,
               }),
             }
           );
 
           if (!response.ok) {
             throw new Error(
-              `Failed to fetch transactions for item ${item.ItemID}`
+              `Failed to fetch transactions for item ${item.item_id}`
             );
           }
 
@@ -85,7 +85,7 @@ export default function TransactionsPage() {
           const transactionsWithItemId = data.transactions.map(
             (t: Transaction) => ({
               ...t,
-              item_id: item.ItemID,
+              item_id: item.item_id,
             })
           );
           allTransactions.push(...transactionsWithItemId);
