@@ -19,3 +19,10 @@ export interface PlaidItem {
     Valid: boolean;
   };
 }
+
+export const SyncStatus = Object.freeze({
+  IDLE: "idle",
+  IN_PROGRESS: "in_progress",
+  FAILED: "failed",
+  PENDING: "pending",
+});

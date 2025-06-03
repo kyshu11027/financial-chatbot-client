@@ -21,7 +21,7 @@ export default async function ChatLayout({
   }
 
   const conversations = await fetchConversations(session.access_token);
-
+  console.log(session.access_token);
   return (
     <SidebarProvider>
       <SidebarWrapper isLoading={false} conversations={conversations}>

@@ -82,3 +82,44 @@ export const getPlaidItems = async (
     throw error;
   }
 };
+
+export const provisionSaveTransactionsJob = async (
+  session: Session | null,
+  items: PlaidItem[]
+): Promise<boolean> => {
+  if (!session?.access_token || !session?.user?.id) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/plaid/transaction/save`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          items,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Save transactions job failed to provision:", {
+        status: response.status,
+        statusText: response.statusText,
+        error: data,
+      });
+      throw new Error(data?.error || "Failed to fetch Plaid items");
+    }
+
+    return data.success;
+  } catch (error) {
+    console.error("Error fetching Plaid items:", error);
+    throw error;
+  }
+};
