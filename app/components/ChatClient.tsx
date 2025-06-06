@@ -196,7 +196,10 @@ export default function ChatClient({
               <p className="text-md">{message.message}</p>
             </div>
           ) : (
-            <div key={message.timestamp} className="max-w-3/4 mr-auto">
+            <div
+              key={`${message.sender}-${message.timestamp}-${index}`}
+              className="max-w-3/4 mr-auto"
+            >
               {isReceivingMessage &&
               index === messages.length - 1 &&
               message.message === "" ? (
