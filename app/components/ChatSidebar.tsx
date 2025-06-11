@@ -21,10 +21,12 @@ import {
 } from "@/app/components/SidebarButtons";
 import UserInfoDialog from "@/app/components/UserInfoDialog";
 import PlaidLinkComponent from "@/app/components/PlaidLink";
+import ErrorItemsButton from "@/app/components/ErrorItemsButton";
 import { Conversation } from "@/types/conversations";
 import ConversationDropdown from "./ConversationDropdown";
 import { useAuth } from "@/app/context/AuthContext";
 import { updateTitle } from "@/lib/conversations";
+import { usePlaid } from "../context/PlaidContext";
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -39,6 +41,7 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
   const [editingId, setEditingId] = useState<string>("");
   const [editingTitle, setEditingTitle] = useState<string>("");
   const { session, loading } = useAuth();
+  const { errorItems } = usePlaid();
 
   // Sync local state with new props
   useEffect(() => {
@@ -142,7 +145,7 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="mb-2 px-2 py-4">
-        <PlaidLinkComponent />
+        {errorItems.length > 0 ? <ErrorItemsButton /> : <PlaidLinkComponent />}
       </SidebarFooter>
     </Sidebar>
   );

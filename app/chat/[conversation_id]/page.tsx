@@ -1,4 +1,4 @@
-import { Suspense, use } from "react";
+import { Suspense } from "react";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import MessageList from "@/app/components/MessageList";

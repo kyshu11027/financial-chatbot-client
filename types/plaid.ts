@@ -18,6 +18,7 @@ export interface PlaidItem {
     Time: string;
     Valid: boolean;
   };
+  link_token: string | null;
 }
 
 export const SyncStatus = Object.freeze({
