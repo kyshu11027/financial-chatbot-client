@@ -80,7 +80,6 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (staleItems.length === 0) {
-      console.log("No stale items");
       return;
     }
 
