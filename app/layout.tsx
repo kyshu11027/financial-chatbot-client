@@ -6,7 +6,7 @@ import Providers from "@/app/components/Providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Finance Chatbot",
+  title: "Penny Finance",
   description: "Your personal finance assistant",
 };
 
