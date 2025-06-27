@@ -34,8 +34,12 @@ export default function SignupPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setSession(data.session);
       router.push("/signup/confirm");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     }
   };
 

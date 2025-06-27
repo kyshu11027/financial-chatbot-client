@@ -7,7 +7,7 @@ import MessagesLoadingSkeleton from "@/app/components/MessagesLoadingSkeleton";
 export default async function Page({
   params,
 }: {
-  params: { conversation_id: string };
+  params: Promise<{ conversation_id: string }>;
 }) {
   const supabase = await createClient();
 

@@ -1,6 +1,10 @@
 "use client";
-import { useCallback, useState, useEffect } from "react";
-import { PlaidLinkOnSuccess, usePlaidLink } from "react-plaid-link";
+import { useCallback, useState } from "react";
+import {
+  PlaidLinkOnSuccess,
+  usePlaidLink,
+  PlaidLinkError,
+} from "react-plaid-link";
 import { useAuth } from "@/app/context/AuthContext";
 import { usePlaid } from "@/app/context/PlaidContext";
 import { Button } from "@/components/ui/button";
@@ -12,7 +16,7 @@ export default function PlaidLinkComponent() {
   const { linkToken, refreshItems } = usePlaid();
 
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
-    async (public_token, metadata) => {
+    async (public_token) => {
       try {
         if (!session?.access_token) {
           return;
@@ -55,7 +59,7 @@ export default function PlaidLinkComponent() {
     [session, refreshItems]
   );
 
-  const onExit = useCallback((err: any) => {
+  const onExit = useCallback((err: PlaidLinkError | null) => {
     if (err != null) {
       console.error("Plaid Link error:", err);
     }
@@ -67,7 +71,7 @@ export default function PlaidLinkComponent() {
     onExit: onExit,
   };
 
-  const { open, ready, error } = usePlaidLink(config);
+  const { open, ready } = usePlaidLink(config);
   if (loading || !linkToken) {
     return (
       <div className="flex items-center justify-center space-x-2">
