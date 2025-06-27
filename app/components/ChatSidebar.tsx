@@ -23,10 +23,10 @@ import UserInfoDialog from "@/app/components/UserInfoDialog";
 import PlaidLinkComponent from "@/app/components/PlaidLink";
 import ErrorItemsButton from "@/app/components/ErrorItemsButton";
 import { Conversation } from "@/types/conversations";
-import ConversationDropdown from "./ConversationDropdown";
+import ConversationDropdown from "@/app/components/ConversationDropdown";
 import { useAuth } from "@/app/context/AuthContext";
 import { updateTitle } from "@/lib/conversations";
-import { usePlaid } from "../context/PlaidContext";
+import { usePlaid } from "@/app/context/PlaidContext";
 
 interface SidebarProps {
   conversations: Conversation[];

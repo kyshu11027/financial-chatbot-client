@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
-import UserInfo from "@/types/user";
+import { UserInfo } from "@/types/user";
 import { Button } from "@/components/ui/button";
 import {
   Form,

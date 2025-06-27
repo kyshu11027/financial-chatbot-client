@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Conversation } from "@/types/conversations";
 import { deleteConversation } from "@/lib/conversations";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@/app/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import { LoaderCircle } from "lucide-react";
 

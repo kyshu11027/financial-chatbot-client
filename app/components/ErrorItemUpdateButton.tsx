@@ -1,12 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { usePlaidLink } from "react-plaid-link";
+import { usePlaidLink, PlaidLinkError } from "react-plaid-link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { updatePlaidItemStatus } from "@/lib/plaid";
+import { PlaidItem } from "@/types/plaid";
 
-export default function ErrorItemUpdateButton({ item }: { item: any }) {
+export default function ErrorItemUpdateButton({ item }: { item: PlaidItem }) {
   const { session } = useAuth();
   const router = useRouter();
 
@@ -15,7 +16,7 @@ export default function ErrorItemUpdateButton({ item }: { item: any }) {
     router.refresh();
   }, [router, session]);
 
-  const onExit = useCallback((err: any) => {
+  const onExit = useCallback((err: PlaidLinkError | null) => {
     if (err != null) {
       console.error("Plaid Link error:", err);
     }

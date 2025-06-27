@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -38,7 +38,7 @@ export default function LoginPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       router.push("/");
     } catch (err) {
-      setError("An unexpected error occurred");
+      setError(`An unexpected error occurred: ${err}`);
     } finally {
       setLoading(false);
     }
@@ -99,7 +99,7 @@ export default function LoginPage() {
               href="/signup"
               className="text-blue-500 hover:text-blue-500/90"
             >
-              Don't have an account? Sign up
+              Don&apos;t have an account? Sign up
             </Link>
           </div>
         </CardContent>

@@ -6,7 +6,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
-export default function page() {
+export default function ChatPage() {
   const [isReceivingMessage, setIsReceivingMessage] = useState(false);
   const { session, loading } = useAuth();
   const router = useRouter();

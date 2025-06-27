@@ -1,15 +1,15 @@
 "use client";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import ErrorItemUpdateButton from "@/app/components/ErrorItemUpdateButton";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import Link from "next/link";
 import { usePlaid } from "@/app/context/PlaidContext";
 
 export default function PlaidUpdatePage() {
   const router = useRouter();
   const { errorItems } = usePlaid();
-
 
   useEffect(() => {
     if (errorItems.length === 0) {
@@ -27,18 +27,15 @@ export default function PlaidUpdatePage() {
         </p>
         <div className="space-y-4">
           {errorItems.map((item) => (
-            <ErrorItemUpdateButton
-              key={item.item_id}
-              item={item}
-            />
+            <ErrorItemUpdateButton key={item.item_id} item={item} />
           ))}
         </div>
         <div className="mt-8 flex justify-center">
           <Button variant="outline" asChild className="gap-2">
-            <a href="/">
+            <Link href="/">
               <ArrowLeft className="h-4 w-4" />
               Back to Chat
-            </a>
+            </Link>
           </Button>
         </div>
       </div>

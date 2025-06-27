@@ -3,6 +3,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import SidebarWrapper from "@/app/components/SidebarWrapper";
 import { createClient } from "@/utils/supabase/server";
 import { fetchConversations } from "@/lib/conversations";
+import { Conversation } from "@/types/conversations";
 import { redirect } from "next/navigation";
 
 export default async function ChatLayout({
@@ -20,7 +21,10 @@ export default async function ChatLayout({
     redirect("/login");
   }
 
-  const conversations = await fetchConversations(session.access_token);
+  const conversations: Conversation[] = await fetchConversations(
+    session.access_token
+  );
+
   console.log(session.access_token);
   return (
     <SidebarProvider>
