@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import DeleteConversationDialog from "./DeleteConversationDialog";
+import DeleteConversationDialog from "@/app/components/DeleteConversationDialog";
 import { Conversation } from "@/types/conversations";
 
 export default function ConversationDropdown({

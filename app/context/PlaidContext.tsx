@@ -8,7 +8,7 @@ import {
   provisionSaveTransactionsJob,
   getUpdatePlaidLinkToken,
 } from "@/lib/plaid";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "@/app/context/AuthContext";
 
 interface PlaidContextType {
   items: PlaidItem[];

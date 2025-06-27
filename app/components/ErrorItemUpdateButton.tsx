@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { usePlaidLink } from "react-plaid-link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { updatePlaidItemStatus } from "@/lib/plaid";
 
 export default function ErrorItemUpdateButton({ item }: { item: any }) {

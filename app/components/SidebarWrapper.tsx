@@ -5,6 +5,9 @@ import { SidebarTrigger } from "@/app/components/SidebarButtons";
 import ProfileDropdown from "@/app/components/ProfileDropdown";
 import { useEffect, useState } from "react";
 import { ChatSidebar } from "@/app/components/ChatSidebar";
+import { SubscribeButton } from "@/app/components/SubscribeButton";
+import { useUser } from "@/app/context/UserContext";
+import { SubscriptionStatus } from "@/types/user";
 
 export default function SidebarWrapper({
   children,
@@ -17,6 +20,8 @@ export default function SidebarWrapper({
 }) {
   const { open } = useSidebar();
   const [windowWidth, setWindowWidth] = useState<number | null>(null);
+  const { user } = useUser();
+  console.log(user);
 
   useEffect(() => {
     // Only runs on client
@@ -39,7 +44,7 @@ export default function SidebarWrapper({
       <div className="p-2 flex flex-col h-screen w-full">
         <div className="min-h-12 px-3 pb-2 w-full flex flex-row items-center position-sticky top-0 border-b justify-between">
           {shouldShowTrigger ? <SidebarTrigger /> : <div />}
-
+          {user?.status === SubscriptionStatus.INACTIVE && <SubscribeButton />}
           <ProfileDropdown />
         </div>
 

@@ -1,5 +1,5 @@
 import { fetchMessages } from "@/lib/conversations";
-import ChatClient from "./ChatClient";
+import ChatClient from "@/app/components/ChatClient";
 
 export default async function MessageList({
   token,

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowUp, LoaderCircle } from "lucide-react";
 import constants from "@/types/constants";
 import { useAutosizeTextArea } from "@/hooks/use-autosize-text-area"; // adjust path as needed
+import { useUser } from "@/app/context/UserContext";
+import { SubscriptionStatus } from "@/types/user";
 
 export default function ChatInput({
   isReceivingMessage,
@@ -13,6 +15,7 @@ export default function ChatInput({
   isReceivingMessage: boolean;
   onSubmit: (message: string) => void;
 }) {
+  const { user, loading } = useUser();
   const [message, setMessage] = useState("");
   const textAreaRef = useAutosizeTextArea(
     message,
@@ -32,6 +35,11 @@ export default function ChatInput({
     }
   };
 
+  const chatDisabled =
+    loading ||
+    isReceivingMessage ||
+    user?.status === SubscriptionStatus.INACTIVE;
+
   return (
     <Card className="w-full max-w-[48rem] border-gray-600 gap-2 px-0 py-5 rounded-[32px]">
       <CardContent>
@@ -50,7 +58,7 @@ export default function ChatInput({
       </CardContent>
       <CardFooter className="flex justify-end">
         <Button
-          disabled={isReceivingMessage}
+          disabled={chatDisabled}
           size="icon"
           className="rounded-full"
           onClick={handleSend}
