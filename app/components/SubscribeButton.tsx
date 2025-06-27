@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 export function SubscribeButton() {
   const router = useRouter();
+
   return (
     <Button
       variant="destructive"

@@ -21,7 +21,6 @@ export default function SidebarWrapper({
   const { open } = useSidebar();
   const [windowWidth, setWindowWidth] = useState<number | null>(null);
   const { user } = useUser();
-  console.log(user);
 
   useEffect(() => {
     // Only runs on client
