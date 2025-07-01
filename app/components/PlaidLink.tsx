@@ -16,7 +16,6 @@ export default function PlaidLinkComponent() {
   const [isLoading, setIsLoading] = useState(true);
   const { refreshItems } = usePlaid();
   const [linkToken, setLinkToken] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const fetchLinkToken = async () => {
     try {
@@ -24,9 +23,6 @@ export default function PlaidLinkComponent() {
       setLinkToken(token);
     } catch (err) {
       console.error("Error fetching Plaid link token:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to fetch Plaid link token"
-      );
       setLinkToken(null);
     } finally {
       setIsLoading(false);
