@@ -25,11 +25,7 @@ export default function SidebarWrapper({
 
   useEffect(() => {
     // Only runs on client
-    const updateWidth = () => {
-      console.log("running updateWidth");
-      setWindowWidth(window.innerWidth);
-    };
-
+    const updateWidth = () => setWindowWidth(window.innerWidth);
     updateWidth(); // Set initial width
     const throttledUpdate = throttle(updateWidth, 150);
     window.addEventListener("resize", throttledUpdate);

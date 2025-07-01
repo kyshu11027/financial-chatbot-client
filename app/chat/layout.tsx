@@ -27,7 +27,6 @@ export default async function ChatLayout({
     session.access_token
   );
 
-  console.log(session.access_token);
   return (
     <UserProvider>
       <PlaidProvider>

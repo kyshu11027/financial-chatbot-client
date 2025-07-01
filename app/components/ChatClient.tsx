@@ -73,8 +73,13 @@ export default function ChatClient({
 
     let eventSource: EventSource | null = null;
     let retryTimeout: NodeJS.Timeout;
+    let retryCount = 0;
 
     const setUpEventSource = () => {
+      if (retryCount >= constants.MAX_SSE_RETRIES) {
+        window.alert("Stale connection with server. Please refresh the page.");
+        return;
+      }
       if (eventSource) {
         eventSource.close();
       }
@@ -82,6 +87,10 @@ export default function ChatClient({
       eventSource = new EventSource(
         `${process.env.NEXT_PUBLIC_API_URL}/sse/${conversation_id}?token=${session.access_token}`
       );
+
+      eventSource.onopen = () => {
+        retryCount = 0; // reset on success
+      };
 
       eventSource.onmessage = (event) => {
         const data = event.data;
@@ -137,6 +146,7 @@ export default function ChatClient({
       };
 
       eventSource.onerror = () => {
+        retryCount++;
         console.error(
           `EventSource failed, retrying in ${constants.SSE_TIMEOUT / 1000}s...`
         );
