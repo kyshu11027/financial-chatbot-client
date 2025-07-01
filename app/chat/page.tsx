@@ -5,6 +5,7 @@ import { createNewConversation } from "@/lib/conversations";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import debounce from "lodash.debounce";
 
 export default function ChatPage() {
   const [isReceivingMessage, setIsReceivingMessage] = useState(false);
@@ -26,10 +27,11 @@ export default function ChatPage() {
 
     // Calculate when the component mounts or when the window is resized
     calculateDistanceToBottom();
-    window.addEventListener("resize", calculateDistanceToBottom);
+    const throttledCalculate = debounce(calculateDistanceToBottom, 200);
+    window.addEventListener("resize", throttledCalculate);
 
     return () => {
-      window.removeEventListener("resize", calculateDistanceToBottom);
+      window.removeEventListener("resize", throttledCalculate);
     };
   }, []);
 

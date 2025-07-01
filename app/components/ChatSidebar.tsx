@@ -31,9 +31,14 @@ import { usePlaid } from "@/app/context/PlaidContext";
 interface SidebarProps {
   conversations: Conversation[];
   isLoading: boolean;
+  windowWidth: number | null;
 }
 
-export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
+export function ChatSidebar({
+  conversations,
+  isLoading,
+  windowWidth,
+}: SidebarProps) {
   const params = useParams();
   const { conversation_id } = params;
   const [conversationsClient, setConversations] =
@@ -71,7 +76,7 @@ export function ChatSidebar({ conversations, isLoading }: SidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="flex flex-row drop-shadow-lg justify-between items-center gap-2">
-        <SidebarTrigger />
+        <SidebarTrigger windowWidth={windowWidth} />
         <div>
           <UserInfoDialog />
           <SidebarNewConversation />
