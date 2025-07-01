@@ -103,7 +103,8 @@ export default function SettingsPage() {
           <CardTitle className="text-2xl">Settings</CardTitle>
           <CardDescription className="text-muted-foreground">
             Manage your account and subscription. Deleting or cancelling your
-            subscription will immediately make Penny services inaccessible.
+            subscription will immediately remove your bank information and
+            render Penny services inaccessible.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-2 py-4">
