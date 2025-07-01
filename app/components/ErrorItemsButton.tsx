@@ -21,9 +21,8 @@ export default function ErrorItemsButton() {
     );
   }
 
-
   return (
-    <Link href="/plaid-update">
+    <Link href="/chat/plaid-update">
       <Button
         variant="destructive"
         size="lg"

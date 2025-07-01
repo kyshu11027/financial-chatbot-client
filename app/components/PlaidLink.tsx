@@ -1,10 +1,11 @@
 "use client";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   PlaidLinkOnSuccess,
   usePlaidLink,
   PlaidLinkError,
 } from "react-plaid-link";
+import { getPlaidLinkToken } from "@/lib/plaid";
 import { useAuth } from "@/app/context/AuthContext";
 import { usePlaid } from "@/app/context/PlaidContext";
 import { Button } from "@/components/ui/button";
@@ -12,8 +13,29 @@ import { Loader2 } from "lucide-react";
 
 export default function PlaidLinkComponent() {
   const { session, loading } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const { linkToken, refreshItems } = usePlaid();
+  const [isLoading, setIsLoading] = useState(true);
+  const { refreshItems } = usePlaid();
+  const [linkToken, setLinkToken] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchLinkToken = async () => {
+    try {
+      const token = await getPlaidLinkToken(session);
+      setLinkToken(token);
+    } catch (err) {
+      console.error("Error fetching Plaid link token:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch Plaid link token"
+      );
+      setLinkToken(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLinkToken();
+  }, [session]);
 
   const onSuccess = useCallback<PlaidLinkOnSuccess>(
     async (public_token) => {

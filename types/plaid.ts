@@ -27,3 +27,8 @@ export const SyncStatus = Object.freeze({
   FAILED: "failed",
   PENDING: "pending",
 });
+
+export const ItemStatus = Object.freeze({
+  HEALTHY: "HEALTHY",
+  ERROR: "ERROR",
+});

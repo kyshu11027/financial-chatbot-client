@@ -9,12 +9,14 @@ interface UserContextType {
   user: User | null;
   loading: boolean;
   setUser: (user: User | null) => void;
+  refreshUser: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
   user: null,
   loading: true,
   setUser: () => {},
+  refreshUser: async () => {},
 });
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
@@ -22,24 +24,26 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const { session } = useAuth();
 
+  const fetch = async () => {
+    try {
+      setUser(await fetchUser(session));
+    } catch (err) {
+      console.error("Error fetching user:", err);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!session) return;
-    const fetch = async () => {
-      try {
-        const user = await fetchUser(session);
-        setUser(user);
-      } catch (err) {
-        console.error("Error fetching user:", err);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetch();
   }, [session]);
 
   return (
-    <UserContext.Provider value={{ user, loading, setUser }}>
+    <UserContext.Provider
+      value={{ user, loading, setUser, refreshUser: fetch }}
+    >
       {children}
     </UserContext.Provider>
   );

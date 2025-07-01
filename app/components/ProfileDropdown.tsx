@@ -22,6 +22,10 @@ export default function ProfileDropdown() {
     }
   };
 
+  const handleProfileSettings = () => {
+    router.push("/chat/settings");
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full hover:bg-accent hover:text-accent-foreground">
@@ -35,6 +39,9 @@ export default function ProfileDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="ml-5">
         <DropdownMenuItem onClick={handleLogout}>Log Out</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleProfileSettings}>
+          Profile Settings
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { createClient } from "@/utils/supabase/client";
 import { UserInfo } from "@/types/user";
+import { fetchUserInfo } from "@/lib/user";
 
 interface AuthContextType {
   session: Session | null;
@@ -38,22 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/user-info/get`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${session.access_token}`,
-            },
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch user info");
-        }
-
-        const data = await res.json();
+        const data = await fetchUserInfo(session);
 
         if (data.no_user_info) {
           setUserInfo(null);

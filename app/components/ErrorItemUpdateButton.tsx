@@ -3,16 +3,19 @@ import { Button } from "@/components/ui/button";
 import { usePlaidLink, PlaidLinkError } from "react-plaid-link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
+import { usePlaid } from "@/app/context/PlaidContext";
 import { useCallback } from "react";
 import { updatePlaidItemStatus } from "@/lib/plaid";
 import { PlaidItem } from "@/types/plaid";
 
 export default function ErrorItemUpdateButton({ item }: { item: PlaidItem }) {
   const { session } = useAuth();
+  const { setErrorItems } = usePlaid();
   const router = useRouter();
 
   const onSuccess = useCallback(async () => {
     await updatePlaidItemStatus(session, item.item_id);
+    setErrorItems((prev) => prev.filter((i) => i.item_id !== item.item_id));
     router.refresh();
   }, [router, session]);
 

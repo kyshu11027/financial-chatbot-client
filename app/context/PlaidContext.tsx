@@ -1,9 +1,8 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { PlaidItem, SyncStatus } from "@/types/plaid";
+import { PlaidItem, SyncStatus, ItemStatus } from "@/types/plaid";
 import {
-  getPlaidLinkToken,
   getPlaidItems,
   provisionSaveTransactionsJob,
   getUpdatePlaidLinkToken,
@@ -13,8 +12,8 @@ import { useAuth } from "@/app/context/AuthContext";
 interface PlaidContextType {
   items: PlaidItem[];
   errorItems: PlaidItem[];
+  setErrorItems: React.Dispatch<React.SetStateAction<PlaidItem[]>>;
   loading: boolean;
-  linkToken: string | null;
   error: string | null;
   refreshItems: () => Promise<void>;
 }
@@ -22,8 +21,8 @@ interface PlaidContextType {
 const PlaidContext = createContext<PlaidContextType>({
   items: [],
   errorItems: [],
+  setErrorItems: () => {},
   loading: true,
-  linkToken: null,
   error: null,
   refreshItems: async () => {},
 });
@@ -32,7 +31,6 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
   const { session } = useAuth();
   const [items, setItems] = useState<PlaidItem[]>([]);
   const [errorItems, setErrorItems] = useState<PlaidItem[]>([]);
-  const [linkToken, setLinkToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,7 +39,9 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
       const items = await getPlaidItems(session);
       setItems(items);
       // Filter out items with ERROR status
-      const errorItems = items.filter((item) => item.status === "ERROR");
+      const errorItems = items.filter(
+        (item) => item.status === ItemStatus.ERROR
+      );
       getLinkTokenForItems(items);
       setErrorItems(errorItems);
       setError(null);
@@ -53,19 +53,6 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
       );
       setItems([]);
       setErrorItems([]);
-    }
-  };
-
-  const fetchLinkToken = async () => {
-    try {
-      const token = await getPlaidLinkToken(session);
-      setLinkToken(token);
-    } catch (err) {
-      console.error("Error fetching Plaid link token:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to fetch Plaid link token"
-      );
-      setLinkToken(null);
     }
   };
 
@@ -103,7 +90,6 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     fetchItems();
-    fetchLinkToken();
     setLoading(false);
   }, [session]);
 
@@ -112,9 +98,9 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
       value={{
         items,
         errorItems,
+        setErrorItems,
         loading,
         error,
-        linkToken,
         refreshItems: fetchItems,
       }}
     >

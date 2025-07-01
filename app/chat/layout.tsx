@@ -5,6 +5,8 @@ import { createClient } from "@/utils/supabase/server";
 import { fetchConversations } from "@/lib/conversations";
 import { Conversation } from "@/types/conversations";
 import { redirect } from "next/navigation";
+import { UserProvider } from "@/app/context/UserContext";
+import { PlaidProvider } from "@/app/context/PlaidContext";
 
 export default async function ChatLayout({
   children,
@@ -27,10 +29,14 @@ export default async function ChatLayout({
 
   console.log(session.access_token);
   return (
-    <SidebarProvider>
-      <SidebarWrapper isLoading={false} conversations={conversations}>
-        {children}
-      </SidebarWrapper>
-    </SidebarProvider>
+    <UserProvider>
+      <PlaidProvider>
+        <SidebarProvider>
+          <SidebarWrapper isLoading={false} conversations={conversations}>
+            {children}
+          </SidebarWrapper>
+        </SidebarProvider>
+      </PlaidProvider>
+    </UserProvider>
   );
 }
