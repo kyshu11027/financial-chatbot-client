@@ -40,9 +40,6 @@ export default function SettingsPage() {
     }
     try {
       setDeleteLoading(true);
-      if (user?.status === SubscriptionStatus.ACTIVE) {
-        await unsubscribe(session);
-      }
       await deleteUser(session);
 
       router.push("/login");

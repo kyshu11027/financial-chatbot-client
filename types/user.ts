@@ -17,10 +17,14 @@ interface Expense {
 
 export interface User {
   user_id: string;
-  stripe_customer_id: string;
-  status: string;
+  stripe_id: string | null;
   email: string;
+  status: string;
+  subscription_id: string | null;
   has_used_trial: boolean;
+  plaid_user_token: string | null;
+  consent_retrieved: boolean;
+  consent_retrieved_at: string | null;
 }
 
 export const SubscriptionStatus = Object.freeze({

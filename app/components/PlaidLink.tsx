@@ -6,6 +6,8 @@ import {
   PlaidLinkError,
 } from "react-plaid-link";
 import { getPlaidLinkToken } from "@/lib/plaid";
+import { useUser } from "@/app/context/UserContext";
+import { SubscriptionStatus } from "@/types/user";
 import { useAuth } from "@/app/context/AuthContext";
 import { usePlaid } from "@/app/context/PlaidContext";
 import { Button } from "@/components/ui/button";
@@ -13,6 +15,7 @@ import { Loader2 } from "lucide-react";
 
 export default function PlaidLinkComponent() {
   const { session, loading } = useAuth();
+  const { user } = useUser();
   const [isLoading, setIsLoading] = useState(true);
   const { refreshItems } = usePlaid();
   const [linkToken, setLinkToken] = useState<string | null>(null);
@@ -112,7 +115,9 @@ export default function PlaidLinkComponent() {
       variant="default"
       size="lg"
       className="text-lg text-foreground"
-      disabled={isLoading || !ready}
+      disabled={
+        isLoading || !ready || user?.status !== SubscriptionStatus.ACTIVE
+      }
       onClick={() => open()}
     >
       {isLoading ? (

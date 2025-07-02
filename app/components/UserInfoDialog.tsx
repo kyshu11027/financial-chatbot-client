@@ -16,10 +16,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { PiggyBank } from "lucide-react";
 import UserInfoForm from "@/app/components/UserInfoForm";
-import { useAuth } from "@/app/context/AuthContext";
+import { useUser } from "@/app/context/UserContext";
 
 export default function UserInfoDialog() {
-  const { userInfo } = useAuth();
+  const { userInfo } = useUser();
   const [openDialog, setOpenDialog] = useState(false);
 
   return (

@@ -8,14 +8,12 @@ import { fetchUserInfo } from "@/lib/user";
 
 interface AuthContextType {
   session: Session | null;
-  userInfo: UserInfo | null;
   loading: boolean;
   setSession: (session: Session | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   session: null,
-  userInfo: null,
   loading: true,
   setSession: () => {},
 });
@@ -23,7 +21,6 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -32,23 +29,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         data: { session },
       } = await supabase.auth.getSession();
       setSession(session);
-
-      if (!session) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const data = await fetchUserInfo(session);
-
-        if (data.no_user_info) {
-          setUserInfo(null);
-        } else {
-          setUserInfo(data);
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
 
       setLoading(false);
     };
@@ -65,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase.auth]);
 
   return (
-    <AuthContext.Provider value={{ session, userInfo, loading, setSession }}>
+    <AuthContext.Provider value={{ session, loading, setSession }}>
       {children}
     </AuthContext.Provider>
   );

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/app/context/AuthContext";
+import { useUser } from "@/app/context/UserContext";
 import { Plus, LoaderCircle } from "lucide-react";
 
 // Schema for the dynamic fields
@@ -48,6 +49,7 @@ export default function UserInfoForm({
   setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { session } = useAuth();
+  const { refreshUserInfo } = useUser();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -85,6 +87,7 @@ export default function UserInfoForm({
         console.error("Failed to submit user info");
       }
 
+      await refreshUserInfo();
       setOpenDialog(false);
     } catch (error) {
       console.error("An error occurred while submitting user info:", error);
