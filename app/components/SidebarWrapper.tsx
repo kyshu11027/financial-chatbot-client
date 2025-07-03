@@ -9,6 +9,15 @@ import { SubscribeButton } from "@/app/components/SubscribeButton";
 import { useUser } from "@/app/context/UserContext";
 import { SubscriptionStatus } from "@/types/user";
 import throttle from "lodash.throttle";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ConsentDialog } from "@/app/components/ConsentDialog";
 
 export default function SidebarWrapper({
   children,
@@ -22,6 +31,8 @@ export default function SidebarWrapper({
   const { open } = useSidebar();
   const [windowWidth, setWindowWidth] = useState<number | null>(null);
   const { user } = useUser();
+  const [openConsent, setOpenConsent] = useState(false);
+  const [consentChecked, setConsentChecked] = useState(false);
 
   useEffect(() => {
     // Only runs on client
@@ -31,37 +42,55 @@ export default function SidebarWrapper({
     window.addEventListener("resize", throttledUpdate);
     return () => window.removeEventListener("resize", throttledUpdate);
   }, []);
+
+  useEffect(() => {
+    if (user && user.consent_retrieved === false) {
+      setOpenConsent(true);
+    }
+  }, [user]);
+
+  const handleConsent = async () => {
+    // Dummy API call
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    setOpenConsent(false);
+  };
+
   const shouldShowTrigger =
     windowWidth !== null && (windowWidth < 768 || !open);
 
   return (
-    <div className="flex w-full">
-      {isLoading ? (
-        <ChatSidebar
-          windowWidth={windowWidth}
-          conversations={[]}
-          isLoading={true}
-        />
-      ) : (
-        <ChatSidebar
-          windowWidth={windowWidth}
-          conversations={conversations}
-          isLoading={false}
-        />
-      )}
-      <div className="p-2 flex flex-col h-screen w-full">
-        <div className="min-h-12 px-3 pb-2 w-full flex flex-row items-center position-sticky top-0 border-b justify-between">
-          {shouldShowTrigger ? (
-            <SidebarTrigger windowWidth={windowWidth} />
-          ) : (
-            <div />
-          )}
-          {user?.status === SubscriptionStatus.INACTIVE && <SubscribeButton />}
-          <ProfileDropdown />
-        </div>
+    <>
+      <ConsentDialog open={openConsent} onAgree={handleConsent} />
+      <div className="flex w-full">
+        {isLoading ? (
+          <ChatSidebar
+            windowWidth={windowWidth}
+            conversations={[]}
+            isLoading={true}
+          />
+        ) : (
+          <ChatSidebar
+            windowWidth={windowWidth}
+            conversations={conversations}
+            isLoading={false}
+          />
+        )}
+        <div className="p-2 flex flex-col h-screen w-full">
+          <div className="min-h-12 px-3 pb-2 w-full flex flex-row items-center position-sticky top-0 border-b justify-between">
+            {shouldShowTrigger ? (
+              <SidebarTrigger windowWidth={windowWidth} />
+            ) : (
+              <div />
+            )}
+            {user?.status === SubscriptionStatus.INACTIVE && (
+              <SubscribeButton />
+            )}
+            <ProfileDropdown />
+          </div>
 
-        {children}
+          {children}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

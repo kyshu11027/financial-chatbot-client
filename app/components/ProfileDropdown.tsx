@@ -38,10 +38,10 @@ export default function ProfileDropdown() {
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="ml-5">
-        <DropdownMenuItem onClick={handleLogout}>Log Out</DropdownMenuItem>
         <DropdownMenuItem onClick={handleProfileSettings}>
           Profile Settings
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Log Out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
