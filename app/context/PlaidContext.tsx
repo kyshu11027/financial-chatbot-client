@@ -80,8 +80,13 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
   const getLinkTokenForItems = (items: PlaidItem[]) => {
     items.forEach(async (item) => {
       try {
-        const token = await getUpdatePlaidLinkToken(session, item.access_token);
-        item.link_token = token;
+        if (item.status === ItemStatus.ERROR) {
+          const token = await getUpdatePlaidLinkToken(
+            session,
+            item.access_token
+          );
+          item.link_token = token;
+        }
       } catch (err) {
         console.error("Error fetching update link token for item:", err);
       }
