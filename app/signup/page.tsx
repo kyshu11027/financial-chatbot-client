@@ -26,8 +26,6 @@ export default function SignupPage() {
         password,
       });
 
-      console.log(data);
-
       if (error) {
         setError(error.message);
         return;

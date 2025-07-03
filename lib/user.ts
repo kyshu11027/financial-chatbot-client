@@ -81,3 +81,29 @@ export const fetchUserInfo = async (session: Session | null) => {
     throw error;
   }
 };
+
+export const updateUserConsent = async (session: Session | null) => {
+  if (!session?.access_token || !session?.user?.id) {
+    return null;
+  }
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user/consent/update`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch user info");
+    }
+
+    return await res.json();
+  } catch (error) {
+    throw error;
+  }
+};

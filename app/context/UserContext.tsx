@@ -33,9 +33,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const getUser = async () => {
     try {
-      const userData = await fetchUser(session);
-      console.log(userData);
-      setUser(userData);
+      setUser(await fetchUser(session));
     } catch (err) {
       console.error("Error fetching user:", err);
       setUser(null);

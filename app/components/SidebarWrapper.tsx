@@ -9,14 +9,6 @@ import { SubscribeButton } from "@/app/components/SubscribeButton";
 import { useUser } from "@/app/context/UserContext";
 import { SubscriptionStatus } from "@/types/user";
 import throttle from "lodash.throttle";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ConsentDialog } from "@/app/components/ConsentDialog";
 
 export default function SidebarWrapper({
@@ -31,8 +23,6 @@ export default function SidebarWrapper({
   const { open } = useSidebar();
   const [windowWidth, setWindowWidth] = useState<number | null>(null);
   const { user } = useUser();
-  const [openConsent, setOpenConsent] = useState(false);
-  const [consentChecked, setConsentChecked] = useState(false);
 
   useEffect(() => {
     // Only runs on client
@@ -43,24 +33,12 @@ export default function SidebarWrapper({
     return () => window.removeEventListener("resize", throttledUpdate);
   }, []);
 
-  useEffect(() => {
-    if (user && user.consent_retrieved === false) {
-      setOpenConsent(true);
-    }
-  }, [user]);
-
-  const handleConsent = async () => {
-    // Dummy API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setOpenConsent(false);
-  };
-
   const shouldShowTrigger =
     windowWidth !== null && (windowWidth < 768 || !open);
 
   return (
     <>
-      <ConsentDialog open={openConsent} onAgree={handleConsent} />
+      <ConsentDialog />
       <div className="flex w-full">
         {isLoading ? (
           <ChatSidebar

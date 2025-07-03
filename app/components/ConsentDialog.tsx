@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,18 +7,42 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useUser } from "@/app/context/UserContext";
+import { updateUserConsent } from "@/lib/user";
+import { useAuth } from "@/app/context/AuthContext";
+import { LoaderCircle } from "lucide-react";
 
-export function ConsentDialog({
-  open,
-  onAgree,
-}: {
-  open: boolean;
-  onAgree: () => void;
-}) {
+export function ConsentDialog() {
+  const { user, setUser } = useUser();
+  const { session } = useAuth();
   const [consentChecked, setConsentChecked] = useState(false);
+  const [openConsent, setOpenConsent] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user && user.consent_retrieved === false) {
+      setOpenConsent(true);
+    }
+  }, [user]);
+
+  const handleAgree = async () => {
+    setLoading(true);
+    try {
+      await updateUserConsent(session);
+      setUser({
+        ...user!,
+        consent_retrieved: true,
+      });
+      setOpenConsent(false);
+    } catch {
+      window.alert("Problem updating user consent. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Dialog open={open} onOpenChange={() => {}} modal>
+    <Dialog open={openConsent} onOpenChange={() => {}} modal>
       <DialogContent hideClose disableOutsideClick disableEscapeKeyDown>
         <DialogHeader>
           <DialogTitle>
@@ -85,9 +109,9 @@ export function ConsentDialog({
         <Button
           className="mt-4 w-full"
           disabled={!consentChecked}
-          onClick={onAgree}
+          onClick={handleAgree}
         >
-          Agree and Continue
+          {loading ? <LoaderCircle className="animate-spin" /> : "Submit"}
         </Button>
       </DialogContent>
     </Dialog>
