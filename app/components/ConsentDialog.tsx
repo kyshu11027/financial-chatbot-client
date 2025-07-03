@@ -56,7 +56,7 @@ export function ConsentDialog() {
           <br />
           <br />
           We use Plaid Inc. to securely connect to your financial accounts. By
-          linking your bank account, you acknowledge and agree to Plaid's
+          linking your bank account, you acknowledge and agree to Plaid&apos;s
           Privacy Policy, which explains how your data is collected, used, and
           stored by Plaid.
           <br />
@@ -102,7 +102,7 @@ export function ConsentDialog() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Plaid's Privacy Policy.
+              Plaid&apos;s Privacy Policy.
             </a>
           </label>
         </div>

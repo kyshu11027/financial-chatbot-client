@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import ChatInput from "@/app/components/ChatInput";
 import { createNewConversation } from "@/lib/conversations";
 import { useAuth } from "@/app/context/AuthContext";
-import { useUser } from "@/app/context/UserContext";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import debounce from "lodash.debounce";
@@ -11,7 +10,6 @@ import debounce from "lodash.debounce";
 export default function ChatPage() {
   const [isReceivingMessage, setIsReceivingMessage] = useState(false);
   const { session, loading } = useAuth();
-  const { user } = useUser();
   const router = useRouter();
   const [animateInput, setAnimateInput] = useState(false); // Track animation state
   const chatInputRef = useRef<HTMLDivElement | null>(null); // Ref to ChatInput
