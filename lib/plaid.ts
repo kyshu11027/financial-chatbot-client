@@ -99,9 +99,6 @@ export const getPlaidItems = async (
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({
-          user_id: session.user.id,
-        }),
       }
     );
 

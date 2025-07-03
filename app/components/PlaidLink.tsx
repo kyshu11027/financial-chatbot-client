@@ -54,7 +54,6 @@ export default function PlaidLinkComponent() {
             },
             body: JSON.stringify({
               public_token,
-              user_id: session.user.id,
             }),
           }
         );
