@@ -42,7 +42,7 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
       const errorItems = items.filter(
         (item) => item.status === ItemStatus.ERROR
       );
-      getLinkTokenForItems(items);
+      getLinkTokenForItems(errorItems);
       setErrorItems(errorItems);
       setError(null);
       triggerSyncJob(items);
@@ -80,13 +80,8 @@ export function PlaidProvider({ children }: { children: React.ReactNode }) {
   const getLinkTokenForItems = (items: PlaidItem[]) => {
     items.forEach(async (item) => {
       try {
-        if (item.status === ItemStatus.ERROR) {
-          const token = await getUpdatePlaidLinkToken(
-            session,
-            item.access_token
-          );
-          item.link_token = token;
-        }
+        const token = await getUpdatePlaidLinkToken(session, item.access_token);
+        item.link_token = token;
       } catch (err) {
         console.error("Error fetching update link token for item:", err);
       }
