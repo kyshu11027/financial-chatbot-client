@@ -6,7 +6,6 @@ import { Message } from "@/types/conversations";
 import { useParams, useSearchParams } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
 import { sendMessage } from "@/lib/conversations";
-import { useRouter } from "next/navigation";
 import constants from "@/types/constants";
 import AIOutput from "@/app/components/AIOutput";
 
@@ -24,7 +23,6 @@ export default function ChatClient({
   const { conversation_id } = useParams();
   const { session, loading } = useAuth();
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   if (typeof conversation_id !== "string") {
     throw new Error("Invalid conversation ID");
@@ -80,7 +78,7 @@ export default function ChatClient({
     const setUpEventSource = () => {
       if (retryCount >= constants.MAX_SSE_RETRIES) {
         window.alert("Stale connection with server. Refreshing the page.");
-        router.refresh();
+        window.location.reload();
         return;
       }
       if (eventSource) {
