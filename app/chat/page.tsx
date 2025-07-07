@@ -57,7 +57,9 @@ export default function ChatPage() {
           }}
           transition={{ duration: 0.5 }} // Smooth transition
         >
-          <h1 className="text-3xl font-bold">How can I help you today?</h1>
+          <h1 className="text-3xl font-bold text-center justify-center">
+            How can I help you today?
+          </h1>
         </motion.div>
 
         <motion.div
