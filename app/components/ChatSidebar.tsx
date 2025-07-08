@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -24,7 +23,6 @@ import { Conversation } from "@/types/conversations";
 import ConversationDropdown from "@/app/components/ConversationDropdown";
 import { useAuth } from "@/app/context/AuthContext";
 import { updateTitle } from "@/lib/conversations";
-import { usePlaid } from "@/app/context/PlaidContext";
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -44,7 +42,6 @@ export function ChatSidebar({
   const [editingId, setEditingId] = useState<string>("");
   const [editingTitle, setEditingTitle] = useState<string>("");
   const { session, loading } = useAuth();
-  const { errorItems } = usePlaid();
 
   // Sync local state with new props
   useEffect(() => {
