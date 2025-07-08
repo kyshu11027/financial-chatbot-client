@@ -8,7 +8,7 @@ export function SubscribeButton() {
     <Button
       variant="destructive"
       size="sm"
-      className="sm:text-sm  text-foreground"
+      className="sm:text-sm text-foreground"
       onClick={() => {
         router.push("/subscribe");
       }}

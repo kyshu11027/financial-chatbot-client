@@ -20,8 +20,6 @@ import {
   SidebarNewConversation,
 } from "@/app/components/SidebarButtons";
 import UserInfoDialog from "@/app/components/UserInfoDialog";
-import PlaidLinkComponent from "@/app/components/PlaidLink";
-import ErrorItemsButton from "@/app/components/ErrorItemsButton";
 import { Conversation } from "@/types/conversations";
 import ConversationDropdown from "@/app/components/ConversationDropdown";
 import { useAuth } from "@/app/context/AuthContext";
@@ -149,9 +147,6 @@ export function ChatSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="mb-2 px-2 py-4">
-        {errorItems.length > 0 ? <ErrorItemsButton /> : <PlaidLinkComponent />}
-      </SidebarFooter>
     </Sidebar>
   );
 }

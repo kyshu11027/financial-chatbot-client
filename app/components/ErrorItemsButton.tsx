@@ -11,7 +11,7 @@ export default function ErrorItemsButton() {
     return (
       <Button
         variant="destructive"
-        size="lg"
+        size="sm"
         className="text-sm text-foreground w-full"
         disabled
       >
@@ -25,7 +25,7 @@ export default function ErrorItemsButton() {
     <Link href="/chat/plaid-update">
       <Button
         variant="destructive"
-        size="lg"
+        size="sm"
         className="text-sm text-foreground w-full"
       >
         Fix Bank Connection Issues ({errorItems.length})

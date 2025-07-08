@@ -92,32 +92,38 @@ export default function PlaidLinkComponent() {
   };
 
   const { open, ready } = usePlaidLink(config);
+
+  const handlePlaidClick = () => {
+    open();
+
+    setTimeout(() => {}, 1000); // 500ms is usually sufficient
+  };
+
   if (loading || !linkToken) {
     return (
-      <div className="flex items-center justify-center space-x-2">
+      <Button
+        variant="default"
+        size="sm"
+        className="sm:text-sm text-foreground"
+        disabled={
+          isLoading || !ready || user?.status !== SubscriptionStatus.ACTIVE
+        }
+      >
         <Loader2 className="h-4 w-4 animate-spin" />
         <span>Loading...</span>
-      </div>
-    );
-  }
-
-  if (!session?.access_token) {
-    return (
-      <div className="text-center text-muted-foreground">
-        Please log in to connect your bank account
-      </div>
+      </Button>
     );
   }
 
   return (
     <Button
       variant="default"
-      size="lg"
-      className="text-lg text-foreground"
+      size="sm"
+      className="sm:text-sm text-foreground"
       disabled={
         isLoading || !ready || user?.status !== SubscriptionStatus.ACTIVE
       }
-      onClick={() => open()}
+      onClick={handlePlaidClick}
     >
       {isLoading ? (
         <>

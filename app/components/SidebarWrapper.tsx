@@ -10,6 +10,9 @@ import { useUser } from "@/app/context/UserContext";
 import { SubscriptionStatus } from "@/types/user";
 import throttle from "lodash.throttle";
 import { ConsentDialog } from "@/app/components/ConsentDialog";
+import PlaidLinkComponent from "@/app/components/PlaidLink";
+import ErrorItemsButton from "@/app/components/ErrorItemsButton";
+import { usePlaid } from "@/app/context/PlaidContext";
 
 export default function SidebarWrapper({
   children,
@@ -23,6 +26,7 @@ export default function SidebarWrapper({
   const { open } = useSidebar();
   const [windowWidth, setWindowWidth] = useState<number | null>(null);
   const { user } = useUser();
+  const { errorItems } = usePlaid();
 
   useEffect(() => {
     // Only runs on client
@@ -60,8 +64,12 @@ export default function SidebarWrapper({
             ) : (
               <div />
             )}
-            {user?.status === SubscriptionStatus.INACTIVE && (
+            {user?.status === SubscriptionStatus.INACTIVE ? (
               <SubscribeButton />
+            ) : errorItems.length > 0 ? (
+              <ErrorItemsButton />
+            ) : (
+              <PlaidLinkComponent />
             )}
             <ProfileDropdown />
           </div>
