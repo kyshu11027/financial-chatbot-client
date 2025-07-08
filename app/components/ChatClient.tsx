@@ -77,8 +77,12 @@ export default function ChatClient({
 
     const setUpEventSource = () => {
       if (retryCount >= constants.MAX_SSE_RETRIES) {
-        window.alert("Stale connection with server. Refreshing the page.");
-        window.location.reload();
+        const confirmed = window.confirm(
+          "Stale connection with server. Refreshing the page."
+        );
+        if (confirmed) {
+          window.location.replace(window.location.href);
+        }
         return;
       }
       if (eventSource) {
