@@ -13,6 +13,20 @@
   }
 
   :root {
+    --vh: 1vh; /* Default for older browsers */
+  }
+
+  @supports (height: 100dvh) {
+    :root {
+      --vh: 1dvh; /* Overrides if dvh is supported */
+    }
+  }
+
+  .container {
+    max-height: calc(var(--vh) * 100);
+  }
+
+  :root {
     --radius: 0.5rem;
     --background: 220 14% 12%;
     --foreground: 210 40% 98%;
