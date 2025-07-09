@@ -20,8 +20,8 @@ export function ConsentDialog() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setOpenConsent(true);
     if (user && user.consent_retrieved === false) {
-      setOpenConsent(true);
     }
   }, [user]);
 
@@ -43,13 +43,18 @@ export function ConsentDialog() {
 
   return (
     <Dialog open={openConsent} onOpenChange={() => {}} modal>
-      <DialogContent hideClose disableOutsideClick disableEscapeKeyDown>
+      <DialogContent
+        hideClose
+        disableOutsideClick
+        disableEscapeKeyDown
+        className="max-h-[100svh] sm:max-h-[80svh] flex flex-col"
+      >
         <DialogHeader>
           <DialogTitle>
             User Consent for Accessing and Storing Bank Data
           </DialogTitle>
         </DialogHeader>
-        <div className="text-sm text-muted-foreground">
+        <div className="flex-1 overflow-y-auto px-1 text-sm text-muted-foreground">
           By using our service, you agree to grant us permission to access, use,
           and store your bank account and transaction data for the purpose of
           providing personalized financial insights and services.
@@ -88,7 +93,7 @@ export function ConsentDialog() {
           access, use, and storage of your bank data via Plaid as described
           above.
         </div>
-        <div className="flex flex-row items-center gap-3 mt-4">
+        <div className="flex flex-row items-center gap-3 mt-2">
           <Checkbox
             id="consent"
             checked={consentChecked}
