@@ -20,8 +20,8 @@ export function ConsentDialog() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setOpenConsent(true);
     if (user && user.consent_retrieved === false) {
+      setOpenConsent(true);
     }
   }, [user]);
 
