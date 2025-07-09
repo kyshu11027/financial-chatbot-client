@@ -14,11 +14,13 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { setSession } = useAuth();
   const supabase = createClient();
 
   const handleSignup = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -41,6 +43,8 @@ export default function SignupPage() {
       } else {
         setError("An unknown error occurred");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,8 +107,8 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full">
-                Sign up
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Creating account..." : "Sign up"}
               </Button>
             </form>
             <div className="mt-6 text-center">
