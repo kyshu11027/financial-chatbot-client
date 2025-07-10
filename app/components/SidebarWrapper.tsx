@@ -58,7 +58,7 @@ export default function SidebarWrapper({
           />
         )}
         <div className="p-2 flex flex-col container w-full">
-          <div className="min-h-12 px-3 pb-2 w-full flex flex-row items-center position-sticky top-0 border-b justify-between">
+          <div className="h-[3rem] px-3 pb-2 w-full flex flex-row items-center position-sticky top-0 border-b justify-between">
             {shouldShowTrigger ? (
               <SidebarTrigger windowWidth={windowWidth} />
             ) : (
