@@ -28,7 +28,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "lucide-react": "^0.486.0",
-    "next": "^15.2.6",
+    "next": "15.5.9",
     "plaid": "^31.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
